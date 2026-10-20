@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import RecipeCard from './RecipeCard.astro';
+import TagTabs from './TagTabs.astro';
+
+interface Props {
+  /** The recipes to show as cards. */
+  recipes: CollectionEntry<'recipes'>[];
+  /** Every tag in the box, for the tabs. */
+  tags: string[];
+  activeTag?: string;
+}
+
+const { recipes, tags, activeTag } = Astro.props;
+const sorted = [...recipes].sort((a, b) => a.data.title.localeCompare(b.data.title));
+const cards = `${sorted.length} ${sorted.length === 1 ? 'card' : 'cards'}`;
+---
+
+<header class="masthead">
+  <h1 class="site-title">Recipe Rolodex</h1>
+  <p class="tagline">a box of cards worth keeping</p>
+</header>
+
+{tags.length > 0 && <TagTabs tags={tags} activeTag={activeTag} />}
+
+<div class="card-grid">
+  {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
+</div>
+
+<footer class="footnote">{activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the box`}</footer>
+
+<style>
+  .masthead { display: flex; flex-direction: column; gap: var(--space-1); }
+  .site-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-3xl);
+    letter-spacing: 1px;
+  }
+  .tagline { margin: 0; font-family: var(--font-hand); font-size: 1.625rem; color: var(--color-pencil); }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 36px 28px;
+    padding-top: var(--space-3);
+  }
+  .footnote { text-align: center; font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-pencil); }
+
+  @media (max-width: 600px) {
+    .site-title { font-size: 2.5rem; }
+  }
+</style>

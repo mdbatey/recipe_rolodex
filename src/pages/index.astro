@@ -1,43 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import RecipeCard from '../components/RecipeCard.astro';
+import RecipeBox from '../components/RecipeBox.astro';
+import { allTags } from '../lib/tags';
 
-const recipes = (await getCollection('recipes')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const recipes = await getCollection('recipes');
 ---
 
 <Base title="Recipe Rolodex">
-  <header class="masthead">
-    <h1 class="site-title">Recipe Rolodex</h1>
-    <p class="tagline">a box of cards worth keeping</p>
-  </header>
-
-  <div class="card-grid">
-    {recipes.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
-  </div>
-
-  <footer class="footnote">{recipes.length} {recipes.length === 1 ? 'card' : 'cards'} in the box</footer>
+  <RecipeBox recipes={recipes} tags={allTags(recipes)} />
 </Base>
-
-<style>
-  .masthead { display: flex; flex-direction: column; gap: var(--space-1); }
-  .site-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-3xl);
-    letter-spacing: 1px;
-  }
-  .tagline { margin: 0; font-family: var(--font-hand); font-size: 1.625rem; color: var(--color-pencil); }
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 36px 28px;
-    padding-top: var(--space-3);
-  }
-  .footnote { text-align: center; font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-pencil); }
-
-  @media (max-width: 600px) {
-    .site-title { font-size: 2.5rem; }
-  }
-</style>

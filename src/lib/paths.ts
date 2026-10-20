@@ -11,3 +11,7 @@ export function withBase(path: string, base: string = import.meta.env.BASE_URL):
 export function recipePath(slug: string): string {
   return withBase(`/recipes/${slug}/`);
 }
+
+export function tagPath(tag: string): string {
+  return withBase(`/tags/${tag}/`);
+}

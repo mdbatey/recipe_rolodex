@@ -1,0 +1,22 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import RecipeBox from '../../components/RecipeBox.astro';
+import { allTags, tagLabel } from '../../lib/tags';
+
+export const getStaticPaths = (async () => {
+  const recipes = await getCollection('recipes');
+  const tags = allTags(recipes);
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { tag, tags, recipes: recipes.filter((recipe) => recipe.data.tags.includes(tag)) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { tag, tags, recipes } = Astro.props;
+---
+
+<Base title={`${tagLabel(tag)} · Recipe Rolodex`} description={`Recipes tagged ${tag} in the Recipe Rolodex.`}>
+  <RecipeBox recipes={recipes} tags={tags} activeTag={tag} />
+</Base>
