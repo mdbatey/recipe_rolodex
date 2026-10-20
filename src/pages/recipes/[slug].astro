@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import { withBase } from '../../lib/paths';
+import { tagPath, withBase } from '../../lib/paths';
 
 export const getStaticPaths = (async () => {
   const recipes = await getCollection('recipes');
@@ -67,7 +67,7 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
 
       {(tags.length > 0 || source) && (
         <div class="stamps">
-          {tags.map((tag) => <span class="stamp stamp--lg">{tag}</span>)}
+          {tags.map((tag) => <a class="stamp stamp--lg" href={tagPath(tag)}>{tag}</a>)}
           {source && (
             <span class="source">
               from {sourceIsLink ? <a href={source} rel="noopener">{new URL(source).hostname}</a> : source}
@@ -133,6 +133,9 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
   .stats dd { margin: var(--space-1) 0 0; font-size: 1.375rem; font-weight: 700; }
 
   .stamp--lg { font-size: 0.8125rem; line-height: 26px; padding: 0 8px; }
+  /* Tag links keep the stamp's look but get a 44px-tall tap area */
+  a.stamp--lg { position: relative; }
+  a.stamp--lg::after { content: ''; position: absolute; inset: -9px -4px; }
   .source { font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-ink-soft); padding-left: var(--space-2); }
 
   .index-card {

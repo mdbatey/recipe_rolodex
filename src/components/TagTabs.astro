@@ -1,0 +1,62 @@
+---
+import { tagLabel } from '../lib/tags';
+import { tagPath, withBase } from '../lib/paths';
+
+interface Props {
+  tags: string[];
+  /** The tag whose page this is; omit on the home page, where "All" is current. */
+  activeTag?: string;
+}
+
+const { tags, activeTag } = Astro.props;
+const tabs = [
+  { label: 'All', href: withBase('/'), current: !activeTag },
+  ...tags.map((tag) => ({ label: tagLabel(tag), href: tagPath(tag), current: tag === activeTag })),
+];
+---
+
+<nav class="tabs" aria-label="Filter by tag">
+  {tabs.map((tab) => (
+    <a class="tab" href={tab.href} aria-current={tab.current ? 'page' : undefined}>{tab.label}</a>
+  ))}
+</nav>
+
+<style>
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 6px;
+    padding-left: var(--space-2);
+    border-bottom: 3px solid var(--color-wood);
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    padding: 0 18px;
+    margin-bottom: -3px;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    letter-spacing: 1px;
+    color: var(--color-ink);
+    text-decoration: none;
+    background: var(--tab-1);
+    border: 2px solid var(--color-wood);
+    border-bottom: 0;
+    border-radius: var(--radius-tab);
+  }
+  .tab:hover { color: var(--color-ink); filter: brightness(1.04); }
+  .tab:nth-child(6n + 2) { background: var(--tab-2); }
+  .tab:nth-child(6n + 3) { background: var(--tab-3); }
+  .tab:nth-child(6n + 4) { background: var(--tab-4); }
+  .tab:nth-child(6n + 5) { background: var(--tab-5); }
+  .tab:nth-child(6n + 6) { background: var(--tab-6); }
+  .tab[aria-current='page'] { background: var(--color-card); min-height: 50px; }
+
+  /* One scrollable row of tabs on phones */
+  @media (max-width: 600px) {
+    .tabs { flex-wrap: nowrap; overflow-x: auto; padding-top: 6px; }
+    .tab { flex-shrink: 0; }
+  }
+</style>
