@@ -8,8 +8,8 @@ export function withBase(path: string, base: string = import.meta.env.BASE_URL):
   return `${trimmedBase}/${trimmedPath}`;
 }
 
-export function recipePath(slug: string): string {
-  return withBase(`/recipes/${slug}/`);
+export function recipePath(slug: string, version?: string): string {
+  return withBase(version ? `/recipes/${slug}/${version}/` : `/recipes/${slug}/`);
 }
 
 export function categoryPath(category: string): string {

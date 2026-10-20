@@ -21,6 +21,8 @@ export function recipeSchema<TCover extends z.ZodType>(cover: TCover) {
     prepTime: z.string().trim().min(1).optional(),
     cookTime: z.string().trim().min(1).optional(),
     source: z.string().trim().min(1).optional(),
+    /** The original's tab name when the recipe has variations; defaults to the source ("Mor Mor's"). */
+    versionLabel: z.string().trim().min(1).max(24).optional(),
     dateAdded: z.coerce.date(),
     /** The cook's own dated additions, shown in handwriting under the recipe. */
     notes: z.array(z.object({ date: z.coerce.date(), text: z.string().trim().min(1) })).default([]),

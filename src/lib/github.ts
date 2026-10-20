@@ -8,9 +8,9 @@ export const REPO = 'mdbatey/recipe_rolodex';
 export const BASE_BRANCH = 'main';
 export const RECIPES_DIR = 'src/content/recipes';
 
-/** GitHub's web editor for a recipe's Markdown on main. */
-export function editUrl(slug: string): string {
-  return `https://github.com/${REPO}/edit/${BASE_BRANCH}/${RECIPES_DIR}/${slug}/index.md`;
+/** GitHub's web editor for a recipe's Markdown on main, or one of its variations'. */
+export function editUrl(slug: string, version?: string): string {
+  return `https://github.com/${REPO}/edit/${BASE_BRANCH}/${RECIPES_DIR}/${slug}/${version ?? 'index'}.md`;
 }
 const API = 'https://api.github.com';
 

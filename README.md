@@ -44,6 +44,29 @@ The form only adds recipes. To change one, use **Edit this card on GitHub** on i
 
 4. Open a pull request. The check builds the site and fails if the frontmatter is wrong. Merging deploys it.
 
+## Adding your own version of a recipe
+
+Put a Markdown file beside the recipe's `index.md`, named for the version (`src/content/recipes/mor-mors-chili/mine.md`), with its own ingredients and steps:
+
+```markdown
+---
+label: Mine              # the tab's name
+dateAdded: 2026-10-20
+# optional: cover, coverAlt, servings, prepTime, cookTime, notes (otherwise the original's photo, servings and times are shown)
+---
+
+## Ingredients
+
+- 2 pounds ground turkey
+- ...
+
+## Steps
+
+1. ...
+```
+
+The recipe page then shows tabs on the card: the original's (named after its source, or `versionLabel:` in the original's frontmatter) and one per version. Each version has its own address, like `/recipes/mor-mors-chili/mine/`.
+
 ## Development
 
 Requires Node 22.22 or later.
