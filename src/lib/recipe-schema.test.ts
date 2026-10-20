@@ -5,7 +5,7 @@ import { recipeSchema } from './recipe-schema';
 // A plain string stands in for Astro's image() helper.
 const schema = recipeSchema(z.string());
 
-const minimal = { title: 'Black Bean Soup', cover: './cover.webp', dateAdded: '2026-10-20' };
+const minimal = { title: 'Black Bean Soup', category: 'dinner', cover: './cover.webp', dateAdded: '2026-10-20' };
 
 describe('recipeSchema', () => {
   it('accepts a minimal recipe and fills defaults', () => {
@@ -30,6 +30,9 @@ describe('recipeSchema', () => {
   it.each([
     ['a missing title', { ...minimal, title: undefined }],
     ['a blank title', { ...minimal, title: '   ' }],
+    ['a missing category', { ...minimal, category: undefined }],
+    ['an unknown category', { ...minimal, category: 'brunch' }],
+    ['a category with capitals', { ...minimal, category: 'Dinner' }],
     ['a missing cover photo', { ...minimal, cover: undefined }],
     ['a missing date', { ...minimal, dateAdded: undefined }],
     ['a tag with capitals', { ...minimal, tags: ['Dinner'] }],

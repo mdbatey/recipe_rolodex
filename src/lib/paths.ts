@@ -12,6 +12,10 @@ export function recipePath(slug: string): string {
   return withBase(`/recipes/${slug}/`);
 }
 
+export function categoryPath(category: string): string {
+  return withBase(`/categories/${category}/`);
+}
+
 export function tagPath(tag: string): string {
   return withBase(`/tags/${tag}/`);
 }

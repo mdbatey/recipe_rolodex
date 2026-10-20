@@ -1,8 +1,9 @@
 ---
 title: Mor Mor's Chili
+category: dinner
 cover: ./cover.webp
 coverAlt: Placeholder card reading "Photo coming soon"
-tags: [dinner]
+tags: [soup, beef]
 source: Mor Mor
 dateAdded: 2026-10-20
 ---

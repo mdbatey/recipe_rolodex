@@ -17,6 +17,7 @@ The form only adds recipes. Edit or delete them in git or on github.com.
    ```markdown
    ---
    title: Grandma's Lasagna
+   category: dinner                                 # breakfast, lunch, dinner, sides, desserts, snacks or drinks
    cover: ./cover.webp
    coverAlt: A slice of lasagna on a blue plate   # optional, describes the photo
    tags: [pasta, dinner]                            # optional, lowercase-with-hyphens

@@ -1,21 +1,27 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import RecipeCard from './RecipeCard.astro';
-import TagTabs from './TagTabs.astro';
+import CategoryTabs from './CategoryTabs.astro';
 import { withBase } from '../lib/paths';
+import { categoryLabel, type CategoryId } from '../lib/categories';
 
 interface Props {
   /** The recipes to show as cards. */
   recipes: CollectionEntry<'recipes'>[];
-  /** Every tag in the box, for the tabs. */
-  tags: string[];
-  activeTag?: string;
+  /** The category tab this page is: "all" on the home page. */
+  category?: CategoryId | 'all';
+  /** The tag this page lists, on a tag page (no tab is current there). */
+  tag?: string;
 }
 
-const { recipes, tags, activeTag } = Astro.props;
+const { recipes, category, tag } = Astro.props;
 const sorted = [...recipes].sort((a, b) => a.data.title.localeCompare(b.data.title));
 const cards = `${sorted.length} ${sorted.length === 1 ? 'card' : 'cards'}`;
-const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the box`;
+const footnote = tag
+  ? `${cards} stamped ${tag}`
+  : category && category !== 'all'
+    ? `${cards} behind ${categoryLabel(category)}`
+    : `${cards} in the box`;
 ---
 
 <header class="masthead">
@@ -38,11 +44,21 @@ const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the b
   </div>
 </div>
 
-{tags.length > 0 && <TagTabs tags={tags} activeTag={activeTag} />}
+<CategoryTabs active={category} />
 
-<div class="card-grid">
-  {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
-</div>
+{tag && (
+  <p class="filter-note">
+    Cards stamped <span class="stamp">{tag}</span> <a href={withBase('/')}>show all</a>
+  </p>
+)}
+
+{sorted.length > 0 ? (
+  <div class="card-grid">
+    {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
+  </div>
+) : (
+  <p class="empty">No cards behind this divider yet.</p>
+)}
 
 <footer class="footnote" data-footnote={footnote} aria-live="polite">{footnote}</footer>
 
@@ -162,6 +178,17 @@ const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the b
     outline: none;
   }
   .search__box input::placeholder { color: var(--color-ink-faint); }
+  .filter-note { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); color: var(--color-ink-soft); }
+  .empty {
+    margin: 0;
+    padding: var(--space-7) var(--space-5);
+    text-align: center;
+    font-family: var(--font-hand);
+    font-size: 1.75rem;
+    color: var(--color-pencil);
+    border: 2px dashed var(--color-wood);
+    border-radius: var(--radius-card);
+  }
   .footnote { text-align: center; font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-pencil); }
 
   @media (max-width: 600px) {
