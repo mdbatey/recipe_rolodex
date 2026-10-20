@@ -2,6 +2,12 @@
 
 A personal recipe box, built with Astro and hosted on GitHub Pages at https://mdbatey.github.io/recipe_rolodex/.
 
+## Adding a recipe
+
+Use **Add a recipe** on the site (`/add/`). The first time on a device it asks for a GitHub fine-grained token limited to this repository, with **Contents** and **Pull requests** set to read and write; the page links to GitHub's token page and walks through it. The token is kept only in that browser. Filing a card shrinks the photo, opens a pull request with the recipe, and links to it. Merge the pull request and the site updates about a minute later.
+
+The form only adds recipes. Edit or delete them in git or on github.com.
+
 ## Adding a recipe by hand
 
 1. Make a folder under `src/content/recipes/` named after the recipe's Slug: its title in lowercase with hyphens, so `Grandma's Lasagna` becomes `grandmas-lasagna`.

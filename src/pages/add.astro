@@ -1,0 +1,374 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/paths';
+import { REPO } from '../lib/github';
+
+const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
+---
+
+<Base title="Add a recipe · Recipe Rolodex" description="File a new card in the Recipe Rolodex.">
+  <div class="narrow">
+    <nav class="topbar">
+      <a class="back-link" href={withBase('/')}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+        Back to the box
+      </a>
+      <span class="topbar__brand">Recipe Rolodex</span>
+    </nav>
+
+    <!-- Shown until a token is saved in this browser -->
+    <section class="card" data-token-panel hidden>
+      <header class="card__head">
+        <h1 class="card__title">Connect to GitHub</h1>
+        <p class="tagline">once per device</p>
+      </header>
+      <div class="card__body">
+        <p>New cards are sent to GitHub as a pull request, so this browser needs a token that can write to <strong>{REPO}</strong>.</p>
+        <ol class="howto">
+          <li>Open <a href={tokenUrl} target="_blank" rel="noopener">GitHub's new fine-grained token page</a>.</li>
+          <li>Under <strong>Repository access</strong>, choose <strong>Only select repositories</strong> and pick <strong>{REPO.split('/')[1]}</strong>.</li>
+          <li>Under <strong>Permissions</strong>, set <strong>Contents</strong> and <strong>Pull requests</strong> to <strong>Read and write</strong>.</li>
+          <li>Generate it, copy it, and paste it below.</li>
+        </ol>
+        <form class="field" data-token-form>
+          <label class="label" for="token">Token</label>
+          <div class="token-row">
+            <input class="input" id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required />
+            <button class="btn" type="submit">Save</button>
+          </div>
+          <span class="hint">Kept only in this browser. If you lose this device, delete the token on GitHub.</span>
+        </form>
+      </div>
+    </section>
+
+    <form class="card" data-recipe-form hidden novalidate>
+      <header class="card__head">
+        <h1 class="card__title">A new card for the box</h1>
+        <p class="tagline">fill it in, and it'll be filed once you approve it</p>
+      </header>
+
+      <div class="card__body">
+        <div class="field">
+          <label class="label" for="title">Title</label>
+          <input class="input input--title" id="title" name="title" type="text" required autocomplete="off" />
+          <span class="hint" data-slug aria-live="polite">Saved as the title in lowercase with hyphens</span>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="label" for="servings">Serves</label>
+            <input class="input" id="servings" name="servings" type="number" min="1" step="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label class="label" for="prepTime">Prep time</label>
+            <input class="input" id="prepTime" name="prepTime" type="text" placeholder="15 min" />
+          </div>
+          <div class="field">
+            <label class="label" for="cookTime">Cook time</label>
+            <input class="input" id="cookTime" name="cookTime" type="text" placeholder="1 hr" />
+          </div>
+        </div>
+
+        <div class="field-row field-row--wide">
+          <div class="field">
+            <label class="label" for="tags">Tags</label>
+            <input class="input" id="tags" name="tags" type="text" placeholder="dinner, weeknight" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label class="label" for="source">Source</label>
+            <input class="input" id="source" name="source" type="text" placeholder="Grandma, or a link" />
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label" id="photo-label">Cover photo</span>
+          <label class="dropzone" for="photo">
+            <span class="dropzone__thumb">
+              <img data-photo-preview alt="" hidden />
+              <span class="dropzone__empty" data-photo-empty></span>
+            </span>
+            <span class="dropzone__text">
+              <strong data-photo-title>Take a photo or choose one</strong>
+              <span class="hint" data-photo-status aria-live="polite">Shrunk to 1600px WebP, under about 400 KB</span>
+            </span>
+            <input class="visually-hidden" id="photo" name="photo" type="file" accept="image/*" aria-labelledby="photo-label" />
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="label" for="coverAlt">Describe the photo</label>
+          <input class="input" id="coverAlt" name="coverAlt" type="text" placeholder="A pot of chili on the stove (optional)" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="ingredients">Ingredients, one per line</label>
+          <textarea class="textarea ruled" id="ingredients" name="ingredients" rows="6" required></textarea>
+        </div>
+
+        <div class="field">
+          <label class="label" for="steps">Steps, one per line</label>
+          <textarea class="textarea ruled" id="steps" name="steps" rows="5" required></textarea>
+        </div>
+
+        <p class="message" data-message role="alert" hidden></p>
+
+        <div class="form-actions">
+          <span class="hint">Sent to GitHub as a pull request. It goes live once you merge it. <button class="link-button" type="button" data-forget-token>Forget token</button></span>
+          <button class="btn" type="submit" data-submit>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6"></path></svg>
+            File this card
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <section class="card" data-done hidden>
+      <header class="card__head">
+        <h1 class="card__title">Filed for review</h1>
+        <p class="tagline">one merge and it's in the box</p>
+      </header>
+      <div class="card__body">
+        <p><strong data-done-title></strong> is waiting as a pull request. Open it on GitHub and press <strong>Merge</strong>; the site updates about a minute later.</p>
+        <div class="form-actions">
+          <a class="btn" data-done-link href="#" target="_blank" rel="noopener">Open the pull request</a>
+          <a href={withBase('/add/')}>Add another card</a>
+        </div>
+      </div>
+    </section>
+
+    <noscript><p class="message">The add-recipe form needs JavaScript.</p></noscript>
+  </div>
+</Base>
+
+<script>
+  import { compressPhoto, type Encoded } from '../lib/photo';
+  import { recipeToMarkdown, parseLines, type RecipeFormFields } from '../lib/recipe-markdown';
+  import { slugify } from '../lib/slug';
+  import { bytesToBase64, submitRecipe } from '../lib/github';
+
+  const TOKEN_KEY = 'recipe-rolodex:github-token';
+
+  const $ = <T extends Element>(selector: string) => document.querySelector<T>(selector)!;
+  const tokenPanel = $<HTMLElement>('[data-token-panel]');
+  const tokenForm = $<HTMLFormElement>('[data-token-form]');
+  const form = $<HTMLFormElement>('[data-recipe-form]');
+  const done = $<HTMLElement>('[data-done]');
+  const message = $<HTMLElement>('[data-message]');
+  const submit = $<HTMLButtonElement>('[data-submit]');
+  const slugHint = $<HTMLElement>('[data-slug]');
+  const photoInput = $<HTMLInputElement>('#photo');
+  const photoPreview = $<HTMLImageElement>('[data-photo-preview]');
+  const photoEmpty = $<HTMLElement>('[data-photo-empty]');
+  const photoTitle = $<HTMLElement>('[data-photo-title]');
+  const photoStatus = $<HTMLElement>('[data-photo-status]');
+
+  // localStorage can be missing or throw (private mode, blocked storage); the form then asks each visit.
+  const storage = {
+    get: () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } },
+    set: (token: string) => { try { localStorage.setItem(TOKEN_KEY, token); } catch { /* kept for this visit only */ } },
+    clear: () => { try { localStorage.removeItem(TOKEN_KEY); } catch { /* nothing stored */ } },
+  };
+  let token = storage.get();
+  let photo: Encoded<Blob> | null = null;
+
+  function showStep() {
+    tokenPanel.hidden = token !== null;
+    form.hidden = token === null;
+  }
+
+  function showMessage(text: string | null) {
+    message.hidden = text === null;
+    message.textContent = text ?? '';
+  }
+
+  tokenForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const input = $<HTMLInputElement>('#token');
+    const value = input.value.trim();
+    if (!value) return;
+    token = value;
+    storage.set(value);
+    input.value = '';
+    showStep();
+    $<HTMLInputElement>('#title').focus();
+  });
+
+  $<HTMLButtonElement>('[data-forget-token]').addEventListener('click', () => {
+    token = null;
+    storage.clear();
+    showStep();
+  });
+
+  // A warning about missing fields goes away once the person starts fixing them.
+  form.addEventListener('input', () => showMessage(null));
+  form.addEventListener('change', () => showMessage(null));
+
+  $<HTMLInputElement>('#title').addEventListener('input', (event) => {
+    const slug = slugify((event.target as HTMLInputElement).value);
+    slugHint.textContent = slug ? `Saved as ${slug}` : 'Saved as the title in lowercase with hyphens';
+  });
+
+  photoInput.addEventListener('change', async () => {
+    const file = photoInput.files?.[0];
+    photo = null;
+    if (!file) return;
+    photoTitle.textContent = file.name;
+    photoStatus.textContent = 'Shrinking…';
+    try {
+      photo = await compressPhoto(file);
+      const kb = Math.round(photo.bytes / 1024);
+      photoStatus.textContent = photo.fits
+        ? `Ready: WebP, ${kb} KB`
+        : `Still ${kb} KB after shrinking, over the 400 KB target. It will load slowly, but you can still file it.`;
+      photoPreview.src = URL.createObjectURL(photo.photo);
+      photoPreview.hidden = false;
+      photoEmpty.hidden = true;
+    } catch (error) {
+      photoStatus.textContent = error instanceof Error ? error.message : 'That file could not be read as a picture.';
+    }
+  });
+
+  function problems(fields: RecipeFormFields): string[] {
+    const list: string[] = [];
+    if (!slugify(fields.title)) list.push('a title with letters or numbers');
+    if (!photo) list.push('a cover photo');
+    if (parseLines(fields.ingredients).length === 0) list.push('at least one ingredient');
+    if (parseLines(fields.steps).length === 0) list.push('at least one step');
+    return list;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const text = (name: string) => String(data.get(name) ?? '');
+    const fields: RecipeFormFields = {
+      title: text('title'), tags: text('tags'), servings: text('servings'), prepTime: text('prepTime'),
+      cookTime: text('cookTime'), source: text('source'), coverAlt: text('coverAlt'),
+      ingredients: text('ingredients'), steps: text('steps'),
+    };
+
+    const missing = problems(fields);
+    if (missing.length > 0) return showMessage(`The card still needs ${missing.join(', ')}.`);
+    if (!token || !photo) return;
+
+    showMessage(null);
+    submit.disabled = true;
+    submit.lastChild!.textContent = ' Filing…';
+    try {
+      const now = new Date();
+      const url = await submitRecipe({
+        token,
+        slug: slugify(fields.title),
+        title: fields.title.trim(),
+        markdown: recipeToMarkdown(fields, now),
+        photoBase64: bytesToBase64(new Uint8Array(await photo.photo.arrayBuffer())),
+        branchSuffix: now.toISOString().replace(/\D/g, '').slice(0, 14),
+      });
+      $<HTMLElement>('[data-done-title]').textContent = fields.title.trim();
+      $<HTMLAnchorElement>('[data-done-link]').href = url;
+      form.hidden = true;
+      done.hidden = false;
+      done.scrollIntoView({ block: 'start' });
+    } catch (error) {
+      showMessage(error instanceof Error ? error.message : 'Something went wrong talking to GitHub.');
+      if (error instanceof Error && 'status' in error && error.status === 401) {
+        token = null;
+        storage.clear();
+        showStep();
+      }
+    } finally {
+      submit.disabled = false;
+      submit.lastChild!.textContent = ' File this card';
+    }
+  });
+
+  showStep();
+</script>
+
+<style>
+  .narrow { width: 100%; max-width: var(--form-max); margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  .topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .topbar__brand { font-family: var(--font-display); font-size: 1.375rem; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--touch-min);
+    font-family: var(--font-display); font-size: 1.0625rem; letter-spacing: 1px; text-decoration: none;
+  }
+
+  .card { background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-card-lifted); }
+  .card[hidden] { display: none; }
+  .card__head { padding: var(--space-6) var(--space-7) var(--space-3); border-bottom: 2px solid var(--color-rule-red); }
+  .card__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 2.125rem; letter-spacing: 1px; }
+  .tagline { margin: var(--space-1) 0 0; font-family: var(--font-hand); font-size: 1.5rem; color: var(--color-pencil); }
+  .card__body { padding: 28px var(--space-7) var(--space-7); display: flex; flex-direction: column; gap: 26px; line-height: 1.6; }
+  .card__body p { margin: 0; }
+
+  .howto { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: var(--space-2); }
+
+  .label { font-family: var(--font-display); font-size: var(--text-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-ink-soft); }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+  .field-row--wide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .input {
+    min-height: 46px; padding: 0 var(--space-3); background: var(--color-field); border: var(--border-ink);
+    border-radius: var(--radius-card); font: inherit; font-size: 1.125rem; color: var(--color-ink); min-width: 0;
+  }
+  .input--title {
+    border: 0; border-bottom: var(--border-ink); background: transparent; padding: var(--space-1) 0; min-height: 48px;
+    font-family: var(--font-hand); font-weight: 700; font-size: var(--text-2xl); color: var(--color-pen);
+  }
+  .input::placeholder, .textarea::placeholder { color: var(--color-ink-faint); }
+  .textarea {
+    --rule: var(--rule-step-field);
+    padding: 6px var(--space-3); background-color: var(--color-field); background-attachment: local;
+    border: var(--border-ink); border-radius: var(--radius-card); font: inherit; line-height: var(--rule); resize: vertical;
+  }
+  .token-row { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .token-row .input { flex: 1 1 240px; }
+  .hint { font-size: 0.9375rem; color: var(--color-ink-soft); line-height: 1.5; }
+
+  .dropzone {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 20px;
+    background: var(--color-card-sunk); border: 2px dashed var(--color-wood); border-radius: var(--radius-card); cursor: pointer;
+  }
+  .dropzone:focus-within { outline: 3px solid var(--color-pen); outline-offset: 2px; }
+  .dropzone__thumb {
+    flex-shrink: 0; width: 120px; height: 90px; padding: 6px; background: var(--color-photo-mat);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.18); transform: rotate(-3deg);
+  }
+  .dropzone__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .dropzone__thumb img[hidden], .dropzone__empty[hidden] { display: none; }
+  .dropzone__empty {
+    display: block; width: 100%; height: 100%;
+    background: repeating-linear-gradient(135deg, var(--color-photo-placeholder-a) 0 8px, var(--color-photo-placeholder-b) 8px 16px);
+  }
+  .dropzone__text { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 200px; overflow-wrap: anywhere; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .message {
+    margin: 0; padding: var(--space-3) var(--space-4); border: 2px solid var(--color-accent);
+    border-radius: var(--radius-card); color: var(--color-accent-hover); background: var(--color-card-sunk);
+  }
+  .message[hidden] { display: none; }
+
+  .form-actions {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4);
+    padding-top: var(--space-5); border-top: var(--border-dashed);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px;
+    background: var(--color-accent); color: var(--color-on-accent); border: 0; border-radius: var(--radius-button);
+    box-shadow: var(--shadow-button); font-family: var(--font-display); font-size: 1.1875rem; letter-spacing: 1px;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn:hover { background: var(--color-accent-hover); color: var(--color-on-accent); }
+  .btn:active { transform: translateY(2px); box-shadow: none; }
+  .btn:disabled { opacity: 0.7; cursor: progress; }
+  .link-button {
+    padding: 0; border: 0; background: none; font: inherit; color: var(--color-accent);
+    text-decoration: underline; cursor: pointer; min-height: var(--touch-min);
+  }
+
+  @media (max-width: 600px) {
+    .card__head, .card__body { padding-left: var(--space-5); padding-right: var(--space-5); }
+  }
+</style>

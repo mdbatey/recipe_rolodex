@@ -19,8 +19,14 @@ const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the b
 ---
 
 <header class="masthead">
-  <h1 class="site-title">Recipe Rolodex</h1>
-  <p class="tagline">a box of cards worth keeping</p>
+  <div>
+    <h1 class="site-title">Recipe Rolodex</h1>
+    <p class="tagline">a box of cards worth keeping</p>
+  </div>
+  <a class="btn" href={withBase('/add/')}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+    Add a recipe
+  </a>
 </header>
 
 <!-- Hidden until the Pagefind index loads, so a page without it (dev server, no JS) shows no dead field. -->
@@ -91,7 +97,23 @@ const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the b
 </script>
 
 <style>
-  .masthead { display: flex; flex-direction: column; gap: var(--space-1); }
+  .masthead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-5); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 22px;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-button);
+    box-shadow: var(--shadow-button);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--color-accent-hover); color: var(--color-on-accent); }
   .site-title {
     margin: 0;
     font-family: var(--font-display);
@@ -99,7 +121,7 @@ const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the b
     font-size: var(--text-3xl);
     letter-spacing: 1px;
   }
-  .tagline { margin: 0; font-family: var(--font-hand); font-size: 1.625rem; color: var(--color-pencil); }
+  .tagline { margin: var(--space-1) 0 0; font-family: var(--font-hand); font-size: 1.625rem; color: var(--color-pencil); }
   .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
