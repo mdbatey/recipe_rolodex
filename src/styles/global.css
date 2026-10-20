@@ -1,0 +1,50 @@
+/* Page basics and the small patterns shared across pages. Components keep their own scoped styles. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: var(--space-7) var(--page-gutter) 80px;
+  background-color: var(--color-kraft);
+  background-image: radial-gradient(var(--color-kraft-speck) 1px, transparent 1px);
+  background-size: 6px 6px;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+}
+
+a { color: var(--color-accent); }
+a:hover { color: var(--color-accent-hover); }
+:focus-visible { outline: 3px solid var(--color-pen); outline-offset: 2px; }
+
+.page { max-width: var(--page-max); margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6); }
+
+/* Ruled index-card lines. Set --rule; line-height matches it so text sits on the lines. */
+.ruled {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), var(--color-rule-blue) calc(var(--rule) - 1px) var(--rule));
+  background-origin: content-box;
+  line-height: var(--rule);
+}
+
+/* Rubber-stamp tags */
+.stamps { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.stamp {
+  font-family: var(--font-display); font-size: var(--text-xs); letter-spacing: var(--tracking-label);
+  text-transform: uppercase; line-height: 22px; padding: 0 7px;
+  color: var(--color-accent); border: 2px solid var(--color-accent); border-radius: var(--radius-button);
+  text-decoration: none;
+}
+.stamps .stamp:nth-child(odd) { transform: rotate(-2deg); }
+.stamps .stamp:nth-child(even) { transform: rotate(1.5deg); }
+
+.tape { position: absolute; width: 92px; height: 26px; background: var(--color-tape); z-index: 2; pointer-events: none; }
+
+@media (max-width: 600px) {
+  body { padding-top: var(--space-5); }
+}
+
+@media print {
+  body { background: none; padding: 0; }
+  .ruled { background-image: none; }
+}
