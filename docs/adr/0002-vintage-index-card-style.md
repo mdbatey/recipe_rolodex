@@ -12,6 +12,6 @@ A clean, modern style was considered. The vintage style was chosen because it su
 
 - The design system lives in `docs/design/`: `DESIGN.md` (rules and components), `tokens.css` (design tokens) and `mockups/` (reference HTML and screenshots). Pages and components are built to match it.
 - The look stays within ADR 0001: plain CSS with custom properties, no UI framework, and no literal flip-through animation.
-- It needs three web fonts (Special Elite, Courier Prime and Caveat), preferably self-hosted.
+- It needs three web fonts (Special Elite, Courier Prime and Caveat). They are self-hosted from `docs/design/fonts/`, so the site makes no third-party font requests.
 - Text sits on ruled lines, so line-height must match the rule spacing tokens. This constrains type sizes inside cards.
 - The site is light-only for now; dark mode would need its own design.

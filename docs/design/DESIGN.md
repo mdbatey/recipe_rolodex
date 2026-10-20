@@ -8,6 +8,7 @@ Read this before building any page or component. The decision is recorded in `do
 
 | File | What it is |
 |---|---|
+| `docs/design/fonts/` | The three web fonts as WOFF2 files, their licenses, and `fonts.css` with the `@font-face` rules. |
 | `docs/design/tokens.css` | Every color, font, size, spacing, shadow and tilt as CSS custom properties. Copy it into the site (for example `src/styles/tokens.css`) and import it once in the base layout. Use tokens, never raw hex values. |
 | `docs/design/mockups/index.html` | Home: the recipe box (search, tag tabs, card grid). |
 | `docs/design/mockups/recipe.html` | A recipe page. |
@@ -63,7 +64,15 @@ Plain and warm, in the recipe-box metaphor without overdoing it: "Search the box
 
 ## Fonts
 
-All three are on Google Fonts under the SIL Open Font License. For the real site, prefer self-hosting with Fontsource (`@fontsource/special-elite`, `@fontsource/courier-prime`, `@fontsource/caveat`) over the Google Fonts `@import` the mockups use: it avoids a third-party request and works with the `base` path. Load only the weights in use: Special Elite 400, Courier Prime 400/700 (plus italic 400), and Caveat 600/700.
+The fonts are bundled in `docs/design/fonts/` (Latin subset, WOFF2, about 230 KB in all), so the site makes no requests to Google or any other third party.
+
+| Font | Weights | License |
+|---|---|---|
+| Special Elite | 400 | Apache 2.0 |
+| Courier Prime | 400, 400 italic, 700 | SIL Open Font License 1.1 |
+| Caveat | 600, 700 | SIL Open Font License 1.1 |
+
+When building the site, copy `docs/design/fonts/` into it (for example `src/styles/fonts/`), keep the `LICENSE-*.txt` files beside the font files, and import `fonts.css` once, before `tokens.css`. The `@font-face` URLs are relative, so they keep working under the Pages `base` path. The files came from Fontsource (`@fontsource/special-elite`, `@fontsource/courier-prime`, `@fontsource/caveat`), so installing those npm packages instead is an equivalent option. Load only the weights listed above. The Latin subset covers English and common accented letters such as é and ñ.
 
 ## Printing
 
