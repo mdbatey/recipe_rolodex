@@ -7,16 +7,15 @@ import { allTags, tagLabel } from '../../lib/tags';
 
 export const getStaticPaths = (async () => {
   const recipes = await getCollection('recipes');
-  const tags = allTags(recipes);
-  return tags.map((tag) => ({
+  return allTags(recipes).map((tag) => ({
     params: { tag },
-    props: { tag, tags, recipes: recipes.filter((recipe) => recipe.data.tags.includes(tag)) },
+    props: { tag, recipes: recipes.filter((recipe) => recipe.data.tags.includes(tag)) },
   }));
 }) satisfies GetStaticPaths;
 
-const { tag, tags, recipes } = Astro.props;
+const { tag, recipes } = Astro.props;
 ---
 
-<Base title={`${tagLabel(tag)} · Recipe Rolodex`} description={`Recipes tagged ${tag} in the Recipe Rolodex.`}>
-  <RecipeBox recipes={recipes} tags={tags} activeTag={tag} />
+<Base title={`${tagLabel(tag)} · Recipe Rolodex`} description={`Recipes stamped ${tag} in the Recipe Rolodex.`}>
+  <RecipeBox recipes={recipes} tag={tag} />
 </Base>

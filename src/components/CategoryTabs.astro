@@ -1,21 +1,20 @@
 ---
-import { tagLabel } from '../lib/tags';
-import { tagPath, withBase } from '../lib/paths';
+import { CATEGORIES, type CategoryId } from '../lib/categories';
+import { categoryPath, withBase } from '../lib/paths';
 
 interface Props {
-  tags: string[];
-  /** The tag whose page this is; omit on the home page, where "All" is current. */
-  activeTag?: string;
+  /** The category whose page this is, "all" on the home page, or none (a tag page). */
+  active?: CategoryId | 'all';
 }
 
-const { tags, activeTag } = Astro.props;
+const { active } = Astro.props;
 const tabs = [
-  { label: 'All', href: withBase('/'), current: !activeTag },
-  ...tags.map((tag) => ({ label: tagLabel(tag), href: tagPath(tag), current: tag === activeTag })),
+  { label: 'All', href: withBase('/'), current: active === 'all' },
+  ...CATEGORIES.map((category) => ({ label: category.label, href: categoryPath(category.id), current: category.id === active })),
 ];
 ---
 
-<nav class="tabs" aria-label="Filter by tag">
+<nav class="tabs" aria-label="Categories">
   {tabs.map((tab) => (
     <a class="tab" href={tab.href} aria-current={tab.current ? 'page' : undefined}>{tab.label}</a>
   ))}

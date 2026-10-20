@@ -5,7 +5,7 @@ import { parseLines, parseTags, recipeToMarkdown, type RecipeFormFields } from '
 import { recipeSchema } from './recipe-schema';
 
 const blank: RecipeFormFields = {
-  title: '', tags: '', servings: '', prepTime: '', cookTime: '', source: '', coverAlt: '', ingredients: '', steps: '',
+  title: '', category: 'dinner', tags: '', servings: '', prepTime: '', cookTime: '', source: '', coverAlt: '', ingredients: '', steps: '',
 };
 const date = new Date('2026-10-20T15:00:00Z');
 
@@ -37,7 +37,8 @@ describe('parseLines', () => {
 describe('recipeToMarkdown', () => {
   const full: RecipeFormFields = {
     title: "Mor Mor's Chili",
-    tags: 'Dinner, Beef',
+    category: 'dinner',
+    tags: 'Soup, Beef',
     servings: '8',
     prepTime: '15 min',
     cookTime: '45 min',
@@ -52,9 +53,10 @@ describe('recipeToMarkdown', () => {
     const recipe = recipeSchema(z.string()).parse(data);
     expect(recipe).toMatchObject({
       title: "Mor Mor's Chili",
+      category: 'dinner',
       cover: './cover.webp',
       coverAlt: 'A pot of chili',
-      tags: ['dinner', 'beef'],
+      tags: ['soup', 'beef'],
       servings: 8,
       prepTime: '15 min',
       cookTime: '45 min',
@@ -72,7 +74,7 @@ describe('recipeToMarkdown', () => {
 
   it('leaves blank optional fields out', () => {
     const { data } = split(recipeToMarkdown({ ...blank, title: 'Toast' }, date));
-    expect(Object.keys(data).sort()).toEqual(['cover', 'dateAdded', 'title']);
+    expect(Object.keys(data).sort()).toEqual(['category', 'cover', 'dateAdded', 'title']);
   });
 
   it('keeps YAML-special characters as plain text', () => {

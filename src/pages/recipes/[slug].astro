@@ -3,7 +3,8 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import { tagPath, withBase } from '../../lib/paths';
+import { categoryPath, tagPath, withBase } from '../../lib/paths';
+import { categoryLabel } from '../../lib/categories';
 
 export const getStaticPaths = (async () => {
   const recipes = await getCollection('recipes');
@@ -15,7 +16,7 @@ interface Props {
 }
 
 const { recipe } = Astro.props;
-const { title, cover, coverAlt, tags, servings, prepTime, cookTime, source, dateAdded } = recipe.data;
+const { title, category, cover, coverAlt, tags, servings, prepTime, cookTime, source, dateAdded } = recipe.data;
 const { Content } = await render(recipe);
 
 const stats = [
@@ -64,6 +65,8 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
           ))}
         </dl>
       )}
+
+      <p class="filed">filed under <a href={categoryPath(category)}>{categoryLabel(category)}</a></p>
 
       {(tags.length > 0 || source) && (
         <div class="stamps">
@@ -136,6 +139,7 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
   /* Tag links keep the stamp's look but get a 44px-tall tap area */
   a.stamp--lg { position: relative; }
   a.stamp--lg::after { content: ''; position: absolute; inset: -9px -4px; }
+  .filed { margin: 0; font-family: var(--font-hand); font-size: 1.5rem; color: var(--color-pencil); }
   .source { font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-ink-soft); padding-left: var(--space-2); }
 
   .index-card {

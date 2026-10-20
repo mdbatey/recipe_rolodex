@@ -2,11 +2,10 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import RecipeBox from '../components/RecipeBox.astro';
-import { allTags } from '../lib/tags';
 
 const recipes = await getCollection('recipes');
 ---
 
 <Base title="Recipe Rolodex">
-  <RecipeBox recipes={recipes} tags={allTags(recipes)} />
+  <RecipeBox recipes={recipes} category="all" />
 </Base>

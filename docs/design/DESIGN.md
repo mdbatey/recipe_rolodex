@@ -37,7 +37,7 @@ Class names refer to `mockup.css`.
 | Component | Look | Notes |
 |---|---|---|
 | Recipe card (`.recipe-card`) | Index card, tape strip at top center, cover photo in a white 6px mat, handwritten title, red rule, then ruled lines with servings and times, source, and stamps. | The whole card is one link to the recipe. The grid is `repeat(auto-fill, minmax(260px, 1fr))`. |
-| Divider tabs (`.tabs`, `.tab`) | Rounded-top tabs in the six tab colors, sitting on a wood-colored line. The active tab is card-colored and taller. | These are the tag filter links. Mark the current one with `aria-current="page"`. On phones they become one horizontally scrolling row. |
+| Divider tabs (`.tabs`, `.tab`) | Rounded-top tabs in the six tab colors, sitting on a wood-colored line. The active tab is card-colored and taller. | These are the Category tabs: All plus each category, always in the same order (ADR 0003). Tags are stamps, not tabs. Mark the current one with `aria-current="page"`. On phones they become one horizontally scrolling row. |
 | Stamp (`.stamp`) | Uppercase typewriter text in a red 2px box, slightly rotated. | Used for tags. On the recipe page each stamp links to its tag page. |
 | Button (`.btn`) | Red with cream text, typewriter font, a darker red bottom edge that "presses" on click. | One primary button per screen at most. |
 | Search box (`.search__box`) | Card-colored field with a 2px ink border and a hard offset shadow. | Pagefind search UI should be restyled to match, not left at its defaults. |

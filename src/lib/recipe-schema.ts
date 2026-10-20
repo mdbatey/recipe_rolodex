@@ -1,4 +1,5 @@
 import { z } from 'astro/zod';
+import { CATEGORY_IDS } from './categories';
 
 /** Tags become URL segments for their filter pages, so keep them simple. */
 export const tagSchema = z
@@ -12,6 +13,7 @@ export const tagSchema = z
 export function recipeSchema<TCover extends z.ZodType>(cover: TCover) {
   return z.object({
     title: z.string().trim().min(1),
+    category: z.enum(CATEGORY_IDS),
     cover,
     coverAlt: z.string().trim().min(1).optional(),
     tags: z.array(tagSchema).default([]),

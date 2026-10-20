@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { withBase } from '../lib/paths';
 import { REPO } from '../lib/github';
+import { CATEGORIES } from '../lib/categories';
 
 const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
 ---
@@ -54,6 +55,15 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
           <span class="hint" data-slug aria-live="polite">Saved as the title in lowercase with hyphens</span>
         </div>
 
+        <div class="field">
+          <label class="label" for="category">Category</label>
+          <select class="input" id="category" name="category" required>
+            <option value="">Choose a divider…</option>
+            {CATEGORIES.map((category) => <option value={category.id}>{category.label}</option>)}
+          </select>
+          <span class="hint">Where you'd usually reach for it. Tags cover the rest.</span>
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label class="label" for="servings">Serves</label>
@@ -72,7 +82,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
         <div class="field-row field-row--wide">
           <div class="field">
             <label class="label" for="tags">Tags</label>
-            <input class="input" id="tags" name="tags" type="text" placeholder="dinner, weeknight" autocomplete="off" />
+            <input class="input" id="tags" name="tags" type="text" placeholder="soup, beef, weeknight" autocomplete="off" />
           </div>
           <div class="field">
             <label class="label" for="source">Source</label>
@@ -144,6 +154,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
   import { compressPhoto, type Encoded } from '../lib/photo';
   import { recipeToMarkdown, parseLines, type RecipeFormFields } from '../lib/recipe-markdown';
   import { slugify } from '../lib/slug';
+  import { CATEGORY_IDS, type CategoryId } from '../lib/categories';
   import { bytesToBase64, submitRecipe } from '../lib/github';
 
   const TOKEN_KEY = 'recipe-rolodex:github-token';
@@ -231,6 +242,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
   function problems(fields: RecipeFormFields): string[] {
     const list: string[] = [];
     if (!slugify(fields.title)) list.push('a title with letters or numbers');
+    if (!CATEGORY_IDS.includes(fields.category)) list.push('a category');
     if (!photo) list.push('a cover photo');
     if (parseLines(fields.ingredients).length === 0) list.push('at least one ingredient');
     if (parseLines(fields.steps).length === 0) list.push('at least one step');
@@ -242,7 +254,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
     const data = new FormData(form);
     const text = (name: string) => String(data.get(name) ?? '');
     const fields: RecipeFormFields = {
-      title: text('title'), tags: text('tags'), servings: text('servings'), prepTime: text('prepTime'),
+      title: text('title'), category: text('category') as CategoryId, tags: text('tags'), servings: text('servings'), prepTime: text('prepTime'),
       cookTime: text('cookTime'), source: text('source'), coverAlt: text('coverAlt'),
       ingredients: text('ingredients'), steps: text('steps'),
     };

@@ -1,8 +1,10 @@
 import { slugify } from './slug';
+import type { CategoryId } from './categories';
 
 /** What the add-recipe form collects, as typed. */
 export type RecipeFormFields = {
   title: string;
+  category: CategoryId;
   /** Comma-separated, as typed: `"Baking, slow cooker"`. */
   tags: string;
   servings: string;
@@ -51,6 +53,7 @@ export function recipeToMarkdown(fields: RecipeFormFields, dateAdded: Date): str
 
   const frontmatter = [
     `title: ${quote(fields.title.trim())}`,
+    `category: ${fields.category}`,
     'cover: ./cover.webp',
     ...optional.filter(([, value]) => value).map(([key, value]) => `${key}: ${quote(value)}`),
     ...(tags.length > 0 ? [`tags: [${tags.join(', ')}]`] : []),
