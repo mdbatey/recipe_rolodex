@@ -22,5 +22,7 @@ export function recipeSchema<TCover extends z.ZodType>(cover: TCover) {
     cookTime: z.string().trim().min(1).optional(),
     source: z.string().trim().min(1).optional(),
     dateAdded: z.coerce.date(),
+    /** The cook's own dated additions, shown in handwriting under the recipe. */
+    notes: z.array(z.object({ date: z.coerce.date(), text: z.string().trim().min(1) })).default([]),
   });
 }
