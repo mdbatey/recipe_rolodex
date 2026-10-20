@@ -116,4 +116,8 @@ describe('editUrl', () => {
   it("opens the recipe's Markdown on main in GitHub's editor", () => {
     expect(editUrl('mor-mors-chili')).toBe('https://github.com/mdbatey/recipe_rolodex/edit/main/src/content/recipes/mor-mors-chili/index.md');
   });
+
+  it("opens a variation's Markdown", () => {
+    expect(editUrl('mor-mors-chili', 'mine')).toBe('https://github.com/mdbatey/recipe_rolodex/edit/main/src/content/recipes/mor-mors-chili/mine.md');
+  });
 });

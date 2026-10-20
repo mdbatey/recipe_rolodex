@@ -6,9 +6,6 @@ coverAlt: Placeholder card reading "Photo coming soon"
 tags: [soup, beef]
 source: Mor Mor
 dateAdded: 2026-10-20
-notes:
-  - date: 2026-10-20
-    text: I like to add diced potatoes and replace the ground beef with ground turkey.
 ---
 
 ## Ingredients

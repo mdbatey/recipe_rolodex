@@ -1,0 +1,18 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import RecipePage from '../../../components/RecipePage.astro';
+import { splitVariationId } from '../../../lib/versions';
+
+export const getStaticPaths = (async () => {
+  const [recipes, variations] = await Promise.all([getCollection('recipes'), getCollection('variations')]);
+  return recipes.map((recipe) => ({
+    params: { slug: recipe.id },
+    props: { recipe, variations: variations.filter((v) => splitVariationId(v.id).recipe === recipe.id) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { recipe, variations } = Astro.props;
+---
+
+<RecipePage recipe={recipe} variations={variations} />

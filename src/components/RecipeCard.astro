@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { recipePath } from '../lib/paths';
 
@@ -12,6 +12,7 @@ interface Props {
 const { recipe, index = 0 } = Astro.props;
 const tilt = `var(--tilt-${(index % 6) + 1})`;
 const { title, cover, coverAlt, tags, servings, prepTime, cookTime, source } = recipe.data;
+const versions = 1 + (await getCollection('variations', (v) => v.id.startsWith(`${recipe.id}/`))).length;
 const times = [prepTime, cookTime].filter(Boolean).join(' + ');
 const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Boolean).join(' · ');
 ---
@@ -25,6 +26,7 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
   <div class="recipe-card__body ruled">
     {meta && <span>{meta}</span>}
     {source && <span class="muted">from {source}</span>}
+    {versions > 1 && <span class="versions">{versions} versions</span>}
     {tags.length > 0 && (
       <div class="stamps">
         {tags.map((tag) => <span class="stamp">{tag}</span>)}
@@ -81,4 +83,5 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
   }
   .recipe-card__body .stamps { padding-top: var(--space-2); }
   .muted { color: var(--color-ink-soft); }
+  .versions { font-family: var(--font-hand); font-size: 1.25rem; color: var(--color-pen); }
 </style>

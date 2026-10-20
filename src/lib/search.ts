@@ -8,8 +8,16 @@ export function normalizePagePath(url: string): string {
   return path.endsWith('/') ? path : `${path}/`;
 }
 
-/** The card links (as written in their `href`) whose page is among the search results. */
+/**
+ * The card links (as written in their `href`) whose page, or one of its
+ * variations' pages (`<card>/<version>/`), is among the search results.
+ */
 export function matchingCards(cardHrefs: string[], resultUrls: string[]): Set<string> {
-  const found = new Set(resultUrls.map(normalizePagePath));
-  return new Set(cardHrefs.filter((href) => found.has(normalizePagePath(href))));
+  const found = resultUrls.map(normalizePagePath);
+  return new Set(
+    cardHrefs.filter((href) => {
+      const card = normalizePagePath(href);
+      return found.some((path) => path === card || (path.startsWith(card) && /^[^/]+\/$/.test(path.slice(card.length))));
+    }),
+  );
 }

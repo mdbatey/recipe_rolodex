@@ -14,4 +14,16 @@ describe('recipe folders', () => {
     expect(title, 'frontmatter has a title').toBeTruthy();
     expect(folder).toBe(slugify(title!));
   });
+
+  // A variation's file name is its URL segment (/recipes/<slug>/<version>/), so keep it slug-shaped.
+  const variationFiles = folders.flatMap((d) =>
+    readdirSync(join(recipesDir, d.name))
+      .filter((file) => file.endsWith('.md') && file !== 'index.md')
+      .map((file) => `${d.name}/${file}`),
+  );
+  it.each(variationFiles.length > 0 ? variationFiles : ['(none)'])('variation %s has a slug-shaped name', (path) => {
+    if (path === '(none)') return;
+    const name = path.split('/')[1]!.replace(/\.md$/, '');
+    expect(name).toBe(slugify(name));
+  });
 });
