@@ -46,6 +46,7 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
     transform: var(--card-tilt, none);
     transition: var(--transition);
   }
+  .recipe-card[hidden] { display: none; }
   .recipe-card:hover {
     color: var(--color-ink);
     box-shadow: var(--shadow-card-lifted);
