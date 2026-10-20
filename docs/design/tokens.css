@@ -1,0 +1,113 @@
+/*
+ * Recipe Rolodex design tokens: vintage index-card style.
+ * Copy into the site (e.g. src/styles/tokens.css) and import once in the base layout.
+ * See docs/design/DESIGN.md for how each token is meant to be used.
+ */
+
+:root {
+  /* Surfaces */
+  --color-kraft: #e6d9bf;          /* page background: kraft paper / recipe-box interior */
+  --color-kraft-speck: rgb(90 70 40 / 0.07);
+  --color-card: #fffbf0;           /* index-card stock */
+  --color-card-sunk: #f6eedb;      /* drop zones, inset areas on a card */
+  --color-photo-mat: #ffffff;      /* white border around snapshots */
+  --color-field: #ffffff;          /* form inputs */
+
+  /* Ink */
+  --color-ink: #2b2620;            /* body text, borders, hard shadows */
+  --color-ink-soft: #5a4a36;       /* labels, secondary text */
+  --color-ink-faint: #7a6e5e;      /* placeholders only */
+  --color-pen: #1f2a44;            /* handwritten titles (blue-black fountain pen) */
+  --color-pencil: #6b4f2e;         /* handwritten asides on kraft */
+
+  /* Accent: faded recipe-card red */
+  --color-accent: #a8322a;         /* buttons, links, stamps, section headings */
+  --color-accent-hover: #7e231d;
+  --color-accent-shadow: #6e1f19;  /* the "pressed key" edge under buttons */
+  --color-on-accent: #fffbf0;
+
+  /* Decoration (never for text) */
+  --color-rule-red: #c9504a;       /* header line across an index card */
+  --color-rule-blue: #b9cde3;      /* ruled lines */
+  --color-wood: #8a6a43;           /* tab borders, dashed dividers */
+  --color-tape: rgb(236 224 180 / 0.85);
+  --color-photo-placeholder-a: #d9cbb0;
+  --color-photo-placeholder-b: #cfbf9f;
+
+  /* Divider-tab colors, used in order for tag tabs; the active tab uses --color-card */
+  --tab-1: #f4e6c4;
+  --tab-2: #e9d3a8;
+  --tab-3: #dcc6e0;
+  --tab-4: #c9dcc4;
+  --tab-5: #f2cfc2;
+  --tab-6: #cfe0ea;
+
+  /* Type */
+  --font-display: "Special Elite", "Courier New", monospace;          /* typewriter: headings, labels, buttons */
+  --font-body: "Courier Prime", "Courier New", monospace;             /* typewriter, readable: body text */
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;      /* handwriting: recipe titles, notes */
+
+  --text-xs: 0.75rem;    /* 12px: stamps */
+  --text-sm: 0.875rem;   /* 14px: field labels, captions */
+  --text-md: 1.0625rem;  /* 17px: body */
+  --text-lg: 1.25rem;    /* 20px: section headings */
+  --text-xl: 1.875rem;   /* 30px: card titles (hand) */
+  --text-2xl: 2.25rem;   /* 36px: form title */
+  --text-3xl: 3.375rem;  /* 54px: recipe page title (hand), site title (display) */
+
+  --tracking-label: 0.125em;  /* uppercase labels and stamps */
+  --tracking-heading: 0.19em; /* uppercase section headings */
+
+  /* Ruled lines: line-height and rule spacing must match */
+  --rule-step-card: 28px;
+  --rule-step-page: 32px;
+  --rule-step-field: 30px;
+
+  /* Space (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+
+  /* Shape */
+  --radius-card: 2px;
+  --radius-button: 3px;
+  --radius-tab: 10px 10px 0 0;
+  --border-ink: 2px solid var(--color-ink);
+  --border-dashed: 1px dashed var(--color-wood);
+
+  /* Depth */
+  --shadow-card: 0 1px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(70 50 20 / 0.18);
+  --shadow-card-lifted: 0 1px 0 rgb(0 0 0 / 0.08), 0 12px 28px rgb(70 50 20 / 0.22);
+  --shadow-photo: 0 10px 24px rgb(70 50 20 / 0.22);
+  --shadow-hard: 3px 3px 0 var(--color-ink);           /* search box, stats strip */
+  --shadow-button: 0 2px 0 var(--color-accent-shadow);
+
+  /* Tilt: small, varied, never more than 1.5deg on cards (3deg on tape) */
+  --tilt-1: rotate(-1deg);
+  --tilt-2: rotate(0.8deg);
+  --tilt-3: rotate(-0.4deg);
+  --tilt-4: rotate(1.1deg);
+  --tilt-5: rotate(-0.9deg);
+  --tilt-6: rotate(0.5deg);
+
+  /* Layout */
+  --page-max: 1160px;
+  --form-max: 860px;
+  --page-gutter: 24px;
+  --touch-min: 44px;
+
+  /* Motion */
+  --transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* Tilts are static, but drop hover lifts and transitions */
+    --transition: none;
+  }
+}

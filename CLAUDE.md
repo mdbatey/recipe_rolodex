@@ -11,3 +11,7 @@ Default five-label vocabulary (needs-triage, needs-info, ready-for-agent, ready-
 ### Domain docs
 
 Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+### Design system
+
+Vintage index-card style. Before building any UI, read `docs/design/DESIGN.md`, use the tokens in `docs/design/tokens.css`, and match the mockups in `docs/design/mockups/` (screenshots in `docs/design/mockups/screenshots/`). See ADR 0002.
