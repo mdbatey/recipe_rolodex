@@ -37,7 +37,7 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
     <span class="topbar__brand">Recipe Rolodex</span>
   </nav>
 
-  <div class="recipe-layout">
+  <div class="recipe-layout" data-pagefind-body>
     <div class="recipe-aside">
       <figure class="snapshot">
         <span class="tape tape--left" aria-hidden="true"></span>
@@ -80,7 +80,7 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
     <article class="index-card">
       <header class="index-card__head">
         <h1 class="index-card__title">{title}</h1>
-        <span class="index-card__date">added {added}</span>
+        <span class="index-card__date" data-pagefind-ignore>added {added}</span>
       </header>
       <div class="index-card__body ruled">
         <Content />

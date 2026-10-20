@@ -43,7 +43,8 @@ npm install
 npm run dev     # local server at http://localhost:4321/recipe_rolodex/
 npm test        # unit tests (Vitest)
 npm run check   # type checks
-npm run build   # production build into dist/
+npm run build   # production build into dist/, plus the Pagefind search index
+npm run preview # serve the build; search only works here, not under `npm run dev`
 ```
 
 Design rules, tokens and mockups are in `docs/design/`. Decisions are in `docs/adr/`.

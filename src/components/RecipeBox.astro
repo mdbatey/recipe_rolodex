@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import RecipeCard from './RecipeCard.astro';
 import TagTabs from './TagTabs.astro';
+import { withBase } from '../lib/paths';
 
 interface Props {
   /** The recipes to show as cards. */
@@ -14,6 +15,7 @@ interface Props {
 const { recipes, tags, activeTag } = Astro.props;
 const sorted = [...recipes].sort((a, b) => a.data.title.localeCompare(b.data.title));
 const cards = `${sorted.length} ${sorted.length === 1 ? 'card' : 'cards'}`;
+const footnote = activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the box`;
 ---
 
 <header class="masthead">
@@ -21,13 +23,72 @@ const cards = `${sorted.length} ${sorted.length === 1 ? 'card' : 'cards'}`;
   <p class="tagline">a box of cards worth keeping</p>
 </header>
 
+<!-- Hidden until the Pagefind index loads, so a page without it (dev server, no JS) shows no dead field. -->
+<div class="search" data-search data-pagefind={withBase('/pagefind/pagefind.js')} data-base={withBase('/')} hidden>
+  <label class="label" for="search">Search the box</label>
+  <div class="search__box">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+    <input id="search" type="search" placeholder="beans, chili, Mor Mor…" autocomplete="off" />
+  </div>
+</div>
+
 {tags.length > 0 && <TagTabs tags={tags} activeTag={activeTag} />}
 
 <div class="card-grid">
   {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
 </div>
 
-<footer class="footnote">{activeTag ? `${cards} tagged ${activeTag}` : `${cards} in the box`}</footer>
+<footer class="footnote" data-footnote={footnote} aria-live="polite">{footnote}</footer>
+
+<script>
+  import { matchingCards } from '../lib/search';
+
+  type PagefindResult = { data: () => Promise<{ url: string }> };
+  type Pagefind = {
+    options: (options: { baseUrl: string }) => Promise<void>;
+    debouncedSearch: (query: string) => Promise<{ results: PagefindResult[] } | null>;
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-search]');
+  const input = root?.querySelector<HTMLInputElement>('input');
+  const footnote = document.querySelector<HTMLElement>('[data-footnote]');
+  const cards = [...document.querySelectorAll<HTMLAnchorElement>('.card-grid a')];
+
+  function show(visible: Set<string> | null, query: string) {
+    for (const card of cards) card.hidden = visible !== null && !visible.has(card.getAttribute('href')!);
+    if (!footnote) return;
+    if (visible === null) {
+      footnote.textContent = footnote.dataset.footnote!;
+    } else if (visible.size === 0) {
+      footnote.textContent = `No cards match "${query}"`;
+    } else {
+      footnote.textContent = `${visible.size} of ${cards.length} ${cards.length === 1 ? 'card matches' : 'cards match'} "${query}"`;
+    }
+  }
+
+  async function start() {
+    if (!root || !input) return;
+    let pagefind: Pagefind;
+    try {
+      pagefind = await import(/* @vite-ignore */ root.dataset.pagefind!);
+      await pagefind.options({ baseUrl: root.dataset.base! });
+    } catch {
+      return; // no index (the dev server, before `pagefind` runs): leave search hidden
+    }
+    root.hidden = false;
+
+    input.addEventListener('input', async () => {
+      const query = input.value.trim();
+      if (query === '') return show(null, query);
+      const search = await pagefind.debouncedSearch(query);
+      if (search === null || input.value.trim() !== query) return; // superseded by later typing
+      const urls = await Promise.all(search.results.map(async (result) => (await result.data()).url));
+      show(matchingCards(cards.map((card) => card.getAttribute('href')!), urls), query);
+    });
+  }
+
+  start();
+</script>
 
 <style>
   .masthead { display: flex; flex-direction: column; gap: var(--space-1); }
@@ -45,6 +106,40 @@ const cards = `${sorted.length} ${sorted.length === 1 ? 'card' : 'cards'}`;
     gap: 36px 28px;
     padding-top: var(--space-3);
   }
+  .search { display: flex; flex-direction: column; gap: var(--space-2); }
+  .search[hidden] { display: none; }
+  .label {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .search__box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: 0 var(--space-4);
+    background: var(--color-card);
+    border: var(--border-ink);
+    border-radius: var(--radius-button);
+    box-shadow: var(--shadow-hard);
+    color: var(--color-ink-soft);
+  }
+  .search__box:focus-within { outline: 3px solid var(--color-pen); outline-offset: 2px; }
+  .search__box input {
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 1.125rem;
+    color: var(--color-ink);
+    outline: none;
+  }
+  .search__box input::placeholder { color: var(--color-ink-faint); }
   .footnote { text-align: center; font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-pencil); }
 
   @media (max-width: 600px) {
