@@ -1,0 +1,54 @@
+/*
+ * Self-hosted web fonts (Latin subset, WOFF2), from Fontsource.
+ * Copied from docs/design/fonts/. Imported once, before tokens.css.
+ * URLs are relative to this file, so they keep working under Astro's `base`.
+ * Licenses: LICENSE-*.txt beside the font files.
+ */
+
+@font-face {
+  font-family: "Special Elite";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./special-elite-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Courier Prime";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./courier-prime-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Courier Prime";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./courier-prime-latin-400-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Courier Prime";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./courier-prime-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./caveat-latin-600-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./caveat-latin-700-normal.woff2") format("woff2");
+}

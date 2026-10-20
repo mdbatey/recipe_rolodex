@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { recipePath } from '../lib/paths';
+
+interface Props {
+  recipe: CollectionEntry<'recipes'>;
+  /** Position in the grid; picks one of the six design tilts so neighbours differ. */
+  index?: number;
+}
+
+const { recipe, index = 0 } = Astro.props;
+const tilt = `var(--tilt-${(index % 6) + 1})`;
+const { title, cover, coverAlt, tags, servings, prepTime, cookTime, source } = recipe.data;
+const times = [prepTime, cookTime].filter(Boolean).join(' + ');
+const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Boolean).join(' · ');
+---
+
+<a class="recipe-card" href={recipePath(recipe.id)} style={`--card-tilt: ${tilt}`}>
+  <span class="tape" aria-hidden="true"></span>
+  <Image class="recipe-card__photo" src={cover} alt={coverAlt ?? ''} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 280px" />
+  <div class="recipe-card__head">
+    <h2 class="recipe-card__title">{title}</h2>
+  </div>
+  <div class="recipe-card__body ruled">
+    {meta && <span>{meta}</span>}
+    {source && <span class="muted">from {source}</span>}
+    {tags.length > 0 && (
+      <div class="stamps">
+        {tags.map((tag) => <span class="stamp">{tag}</span>)}
+      </div>
+    )}
+  </div>
+</a>
+
+<style>
+  .recipe-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-card);
+    color: var(--color-ink);
+    text-decoration: none;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    transform: var(--card-tilt, none);
+    transition: var(--transition);
+  }
+  .recipe-card:hover {
+    color: var(--color-ink);
+    box-shadow: var(--shadow-card-lifted);
+    transform: translateY(-3px);
+  }
+  .recipe-card .tape { top: -12px; left: 50%; margin-left: -46px; transform: rotate(-3deg); }
+  .recipe-card__photo {
+    display: block;
+    width: calc(100% - 28px);
+    height: 168px;
+    margin: 14px 14px 0;
+    object-fit: cover;
+    border: 6px solid var(--color-photo-mat);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  }
+  .recipe-card__head { padding: 14px 18px 4px; border-bottom: 2px solid var(--color-rule-red); }
+  .recipe-card__title {
+    margin: 0;
+    font-family: var(--font-hand);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    color: var(--color-pen);
+  }
+  .recipe-card__body {
+    --rule: var(--rule-step-card);
+    display: flex;
+    flex-direction: column;
+    min-height: calc(var(--rule-step-card) * 3);
+    padding: 6px 18px 18px;
+    font-size: 0.9375rem;
+  }
+  .recipe-card__body .stamps { padding-top: var(--space-2); }
+  .muted { color: var(--color-ink-soft); }
+</style>
