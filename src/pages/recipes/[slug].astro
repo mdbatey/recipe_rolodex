@@ -5,6 +5,7 @@ import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { categoryPath, tagPath, withBase } from '../../lib/paths';
 import { categoryLabel } from '../../lib/categories';
+import { editUrl } from '../../lib/github';
 
 export const getStaticPaths = (async () => {
   const recipes = await getCollection('recipes');
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const { recipe } = Astro.props;
-const { title, category, cover, coverAlt, tags, servings, prepTime, cookTime, source, dateAdded } = recipe.data;
+const { title, category, cover, coverAlt, tags, servings, prepTime, cookTime, source, dateAdded, notes } = recipe.data;
 const { Content } = await render(recipe);
 
 const stats = [
@@ -26,7 +27,8 @@ const stats = [
 ].filter((stat): stat is { label: string; value: string } => Boolean(stat.value));
 
 const sourceIsLink = source ? /^https?:\/\//.test(source) : false;
-const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const monthYear = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const added = monthYear(dateAdded);
 ---
 
 <Base title={`${title} · Recipe Rolodex`}>
@@ -78,6 +80,11 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
           )}
         </div>
       )}
+
+      <a class="edit-link" href={editUrl(recipe.id)} target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+        Edit this card on GitHub
+      </a>
     </div>
 
     <article class="index-card">
@@ -87,6 +94,15 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
       </header>
       <div class="index-card__body ruled">
         <Content />
+        {notes.length > 0 && (
+          <section class="notes" aria-label="Notes">
+            {notes.map((note) => (
+              <p class="note">
+                <time datetime={note.date.toISOString().slice(0, 10)}>{monthYear(note.date)}:</time> {note.text}
+              </p>
+            ))}
+          </section>
+        )}
       </div>
     </article>
   </div>
@@ -139,6 +155,25 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
   /* Tag links keep the stamp's look but get a 44px-tall tap area */
   a.stamp--lg { position: relative; }
   a.stamp--lg::after { content: ''; position: absolute; inset: -9px -4px; }
+  .edit-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--touch-min);
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+  }
+  .edit-link:hover { color: var(--color-accent); }
+  .notes { margin-top: var(--rule); }
+  /* Beats the recipe body's paragraph spacing, so each note sits on the next rule */
+  .index-card__body .note {
+    margin: 0;
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--color-pen);
+  }
+  .note time { font-weight: 700; }
   .filed { margin: 0; font-family: var(--font-hand); font-size: 1.5rem; color: var(--color-pencil); }
   .source { font-family: var(--font-hand); font-size: 1.375rem; color: var(--color-ink-soft); padding-left: var(--space-2); }
 
@@ -211,7 +246,7 @@ const added = dateAdded.toLocaleDateString('en-US', { month: 'short', year: 'num
   }
 
   @media print {
-    .topbar, .snapshot .tape, .stamps { display: none; }
+    .topbar, .snapshot .tape, .stamps, .edit-link { display: none; }
     .index-card, .snapshot { box-shadow: none; transform: none; }
   }
 </style>

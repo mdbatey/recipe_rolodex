@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bytesToBase64, slugExists, submitRecipe, textToBase64, type Submission } from './github';
+import { bytesToBase64, editUrl, slugExists, submitRecipe, textToBase64, type Submission } from './github';
 
 type Call = { method: string; url: string; body?: any };
 
@@ -109,5 +109,11 @@ describe('base64', () => {
   it('encodes large byte arrays', () => {
     const bytes = new Uint8Array(200_000).map((_, i) => i % 256);
     expect(bytesToBase64(bytes)).toBe(Buffer.from(bytes).toString('base64'));
+  });
+});
+
+describe('editUrl', () => {
+  it("opens the recipe's Markdown on main in GitHub's editor", () => {
+    expect(editUrl('mor-mors-chili')).toBe('https://github.com/mdbatey/recipe_rolodex/edit/main/src/content/recipes/mor-mors-chili/index.md');
   });
 });

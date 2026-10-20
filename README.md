@@ -6,7 +6,7 @@ A personal recipe box, built with Astro and hosted on GitHub Pages at https://md
 
 Use **Add a recipe** on the site (`/add/`). The first time on a device it asks for a GitHub fine-grained token limited to this repository, with **Contents** and **Pull requests** set to read and write; the page links to GitHub's token page and walks through it. The token is kept only in that browser. Filing a card shrinks the photo, opens a pull request with the recipe, and links to it. Merge the pull request and the site updates about a minute later.
 
-The form only adds recipes. Edit or delete them in git or on github.com.
+The form only adds recipes. To change one, use **Edit this card on GitHub** on its page: it opens the recipe's `index.md` in GitHub's editor. Fix typos there, or add your own dated additions under `notes:` (see the example below) so the original recipe stays as written. Deleting a recipe means deleting its folder in git or on github.com.
 
 ## Adding a recipe by hand
 
@@ -26,6 +26,9 @@ The form only adds recipes. Edit or delete them in git or on github.com.
    cookTime: 1 hr                                   # optional
    source: Grandma                                  # optional, a name or a URL
    dateAdded: 2026-10-20
+   notes:                                           # optional, your own additions, shown in handwriting
+     - date: 2026-11-02
+       text: I like to add a can of corn with the beans.
    ---
 
    ## Ingredients

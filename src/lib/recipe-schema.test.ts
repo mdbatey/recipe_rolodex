@@ -11,6 +11,7 @@ describe('recipeSchema', () => {
   it('accepts a minimal recipe and fills defaults', () => {
     const recipe = schema.parse(minimal);
     expect(recipe.tags).toEqual([]);
+    expect(recipe.notes).toEqual([]);
     expect(recipe.dateAdded).toBeInstanceOf(Date);
   });
 
@@ -23,6 +24,7 @@ describe('recipeSchema', () => {
       prepTime: '15 min',
       cookTime: '45 min',
       source: 'https://example.com/soup',
+      notes: [{ date: '2026-10-20', text: 'I like to add a can of corn.' }],
     });
     expect(result.success).toBe(true);
   });
@@ -37,6 +39,8 @@ describe('recipeSchema', () => {
     ['a missing date', { ...minimal, dateAdded: undefined }],
     ['a tag with capitals', { ...minimal, tags: ['Dinner'] }],
     ['a tag with spaces', { ...minimal, tags: ['slow cooker'] }],
+    ['a note without text', { ...minimal, notes: [{ date: '2026-10-20', text: ' ' }] }],
+    ['a note without a date', { ...minimal, notes: [{ text: 'More garlic.' }] }],
     ['fractional servings', { ...minimal, servings: 2.5 }],
     ['zero servings', { ...minimal, servings: 0 }],
   ])('rejects %s', (_, input) => {
