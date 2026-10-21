@@ -6,6 +6,7 @@ import { categoryPath, recipePath, tagPath, withBase } from '../lib/paths';
 import { categoryLabel } from '../lib/categories';
 import { editUrl } from '../lib/github';
 import { originalLabel, splitVariationId } from '../lib/versions';
+import NutritionLabel from './NutritionLabel.astro';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
@@ -26,6 +27,8 @@ const prepTime = own?.prepTime ?? recipe.data.prepTime;
 const cookTime = own?.cookTime ?? recipe.data.cookTime;
 const dateAdded = own?.dateAdded ?? recipe.data.dateAdded;
 const notes = own ? own.notes : recipe.data.notes;
+// Never the original's nutrition on a variation: its ingredients differ.
+const nutrition = own ? own.nutrition : recipe.data.nutrition;
 const { Content } = await render(active ?? recipe);
 const activeVersion = active ? splitVariationId(active.id).version : undefined;
 
@@ -102,6 +105,8 @@ const added = monthYear(dateAdded);
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
         Edit this card on GitHub
       </a>
+
+      {nutrition && <NutritionLabel nutrition={nutrition} />}
     </div>
 
     <article class="index-card">

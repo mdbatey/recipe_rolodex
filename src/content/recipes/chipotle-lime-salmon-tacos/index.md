@@ -9,6 +9,15 @@ prepTime: 45 min
 cookTime: 15 min
 source: https://www.ambitiouskitchen.com/chipotle-salmon-tacos/
 dateAdded: 2026-10-21
+nutrition:
+  serving: 2 tacos (with sauce & salsa)
+  calories: 586
+  carbs: 56.5
+  protein: 32.5
+  fat: 26.2
+  saturatedFat: 4.1
+  fiber: 4.7
+  sugar: 9.8
 ---
 
 ## Ingredients

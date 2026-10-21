@@ -1,5 +1,6 @@
 import { z } from 'astro/zod';
 import { CATEGORY_IDS } from './categories';
+import { nutritionSchema } from './nutrition';
 
 /** Tags become URL segments for their filter pages, so keep them simple. */
 export const tagSchema = z
@@ -25,6 +26,7 @@ export function recipeSchema<TCover extends z.ZodType>(cover: TCover) {
     versionLabel: z.string().trim().min(1).max(24).optional(),
     dateAdded: z.coerce.date(),
     /** The cook's own dated additions, shown in handwriting under the recipe. */
+    nutrition: nutritionSchema.optional(),
     notes: z.array(z.object({ date: z.coerce.date(), text: z.string().trim().min(1) })).default([]),
   });
 }

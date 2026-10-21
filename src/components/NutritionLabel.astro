@@ -1,0 +1,70 @@
+---
+import { nutritionRows, type Nutrition } from '../lib/nutrition';
+
+interface Props {
+  nutrition: Nutrition;
+}
+
+const { nutrition } = Astro.props;
+const rows = nutritionRows(nutrition);
+---
+
+<section class="label" aria-labelledby="nutrition-title">
+  <h2 class="label__title" id="nutrition-title">Nutrition Facts</h2>
+  <p class="label__serving">
+    {nutrition.serving ? `per serving: ${nutrition.serving}` : 'per serving'} · approximate
+  </p>
+  {nutrition.calories !== undefined && (
+    <p class="label__calories"><span>Calories</span> <strong>{Math.round(nutrition.calories)}</strong></p>
+  )}
+  {rows.length > 0 && (
+    <dl class="label__rows">
+      {rows.map((row) => (
+        <div class:list={['label__row', { 'label__row--sub': row.indent }]}>
+          <dt>{row.label}</dt>
+          <dd>{row.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</section>
+
+<style>
+  .label {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 300px;
+    padding: var(--space-3) var(--space-4) var(--space-2);
+    background: var(--color-card);
+    border: var(--border-ink);
+    box-shadow: var(--shadow-hard);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+  }
+  .label__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.375rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .label__serving { margin: 2px 0 0; padding-bottom: var(--space-2); font-size: 0.8125rem; color: var(--color-ink-soft); border-bottom: 6px solid var(--color-ink); }
+  .label__calories {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-1) 0;
+    border-bottom: 3px solid var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+  .label__calories strong { font-size: 1.5rem; font-weight: 400; }
+  .label__rows { margin: 0; }
+  .label__row { display: flex; justify-content: space-between; gap: var(--space-3); padding: 3px 0; border-bottom: 1px solid var(--color-ink-soft); }
+  .label__row:last-child { border-bottom: 0; }
+  .label__row dt { font-weight: 700; }
+  .label__row dd { margin: 0; }
+  .label__row--sub dt { font-weight: 400; padding-left: var(--space-4); }
+</style>
