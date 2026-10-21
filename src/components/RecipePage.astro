@@ -92,7 +92,7 @@ const added = monthYear(dateAdded);
           {tags.map((tag) => <a class="stamp stamp--lg" href={tagPath(tag)}>{tag}</a>)}
           {source && (
             <span class="source">
-              from {sourceIsLink ? <a href={source} rel="noopener">{new URL(source).hostname}</a> : source}
+              from {sourceIsLink ? <a href={source} rel="noopener">{new URL(source).hostname.replace(/^www\./, '')}</a> : source}
             </span>
           )}
         </div>
@@ -277,6 +277,16 @@ const added = monthYear(dateAdded);
     line-height: calc(var(--rule) * 2);
     color: var(--color-accent);
   }
+  /* Ingredient groups ("### Salmon", "### Salsa"): a handwritten label on its own rule */
+  .index-card__body :global(h3) {
+    margin: 0;
+    font-family: var(--font-hand);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: var(--rule);
+    color: var(--color-pen);
+  }
+  .index-card__body :global(h3:not(:first-of-type)) { margin-top: var(--rule); }
   .index-card__body :global(p) { margin: 0 0 var(--rule); }
   .index-card__body :global(ul) { list-style: none; margin: 0; padding: 0; }
   .index-card__body :global(ul > li) { position: relative; padding-left: 30px; }
