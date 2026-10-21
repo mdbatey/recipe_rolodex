@@ -26,6 +26,15 @@ The form only adds recipes. To change one, use **Edit this card on GitHub** on i
    cookTime: 1 hr                                   # optional
    source: Grandma                                  # optional, a name or a URL
    dateAdded: 2026-10-20
+   nutrition:                                       # optional, approximate, per serving (grams; calories in kcal)
+     serving: 2 tacos
+     calories: 586
+     carbs: 56.5
+     protein: 32.5
+     fat: 26.2
+     saturatedFat: 4.1
+     fiber: 4.7
+     sugar: 9.8
    notes:                                           # optional, your own additions, shown in handwriting
      - date: 2026-11-02
        text: I like to add a can of corn with the beans.
