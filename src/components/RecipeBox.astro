@@ -48,12 +48,6 @@ const footnote = tag
 <CategoryTabs active={category} />
 <StampRow active={tag} />
 
-{tag && (
-  <p class="filter-note">
-    Cards stamped <span class="stamp">{tag}</span> <a href={withBase('/')}>show all</a>
-  </p>
-)}
-
 {sorted.length > 0 ? (
   <div class="card-grid">
     {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
@@ -180,7 +174,6 @@ const footnote = tag
     outline: none;
   }
   .search__box input::placeholder { color: var(--color-ink-faint); }
-  .filter-note { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); color: var(--color-ink-soft); }
   .empty {
     margin: 0;
     padding: var(--space-7) var(--space-5);
