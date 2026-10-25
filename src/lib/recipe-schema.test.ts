@@ -5,11 +5,12 @@ import { recipeSchema } from './recipe-schema';
 // A plain string stands in for Astro's image() helper.
 const schema = recipeSchema(z.string());
 
-const minimal = { title: 'Black Bean Soup', category: 'dinner', cover: './cover.webp', dateAdded: '2026-10-20' };
+const minimal = { title: 'Black Bean Soup', category: 'dinner', dateAdded: '2026-10-20' };
 
 describe('recipeSchema', () => {
   it('accepts a minimal recipe and fills defaults', () => {
     const recipe = schema.parse(minimal);
+    expect(recipe.cover).toBeUndefined();
     expect(recipe.tags).toEqual([]);
     expect(recipe.notes).toEqual([]);
     expect(recipe.dateAdded).toBeInstanceOf(Date);
@@ -18,6 +19,7 @@ describe('recipeSchema', () => {
   it('accepts every optional field', () => {
     const result = schema.safeParse({
       ...minimal,
+      cover: './cover.webp',
       coverAlt: 'A bowl of soup',
       tags: ['soup', 'slow-cooker'],
       servings: 6,
@@ -35,7 +37,6 @@ describe('recipeSchema', () => {
     ['a missing category', { ...minimal, category: undefined }],
     ['an unknown category', { ...minimal, category: 'brunch' }],
     ['a category with capitals', { ...minimal, category: 'Dinner' }],
-    ['a missing cover photo', { ...minimal, cover: undefined }],
     ['a missing date', { ...minimal, dateAdded: undefined }],
     ['a tag with capitals', { ...minimal, tags: ['Dinner'] }],
     ['a tag with spaces', { ...minimal, tags: ['slow cooker'] }],

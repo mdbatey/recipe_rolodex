@@ -46,7 +46,7 @@ Class names refer to `mockup.css`.
 | Index card (`.index-card`) | The recipe page's main card: big handwritten title, date added, red rule, ruled body with "Ingredients" and "Steps" in red uppercase typewriter. | Ingredients are checkboxes that strike through when ticked. Steps are numbered in red handwriting. |
 | Form fields (`.input`, `.textarea`) | White fields with 2px ink borders. The title field is handwriting on a single underline, like writing on a card. Textareas are ruled. | Each field has a visible `<label>` in the uppercase label style. Under the title, show the slug it will be saved as. |
 | Photo drop zone (`.dropzone`) | Dashed wood-colored border on a sunk card background, with a tilted thumbnail. | After choosing a photo, show its preview and final size here. |
-| Photo placeholder (`.photo-placeholder`) | Tan diagonal stripes with "Cover photo". | Mockup only. Real recipes always have a cover photo. |
+| Photo placeholder (`.photo-placeholder`) | Tan diagonal stripes with a small tilted paper label: the recipe's title in handwriting over a red rule, then "Photo coming soon" in typewriter. | Drawn in code (`src/components/PhotoPlaceholder.astro`) for any recipe without a cover photo. Never bake a title into an image file. |
 
 ## Copy voice
 

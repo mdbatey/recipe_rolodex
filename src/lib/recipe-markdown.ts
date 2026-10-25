@@ -39,13 +39,14 @@ function quote(value: string): string {
 /**
  * Builds a recipe's `index.md`: frontmatter matching the content schema
  * (src/lib/recipe-schema.ts), then `## Ingredients` and `## Steps`.
- * Blank optional fields are left out. The cover is always `./cover.webp`.
+ * Blank optional fields are left out. With a photo, the cover is `./cover.webp`;
+ * without one, there's no cover (or description) and the site draws a placeholder.
  */
-export function recipeToMarkdown(fields: RecipeFormFields, dateAdded: Date): string {
+export function recipeToMarkdown(fields: RecipeFormFields, dateAdded: Date, { hasPhoto = false } = {}): string {
   const tags = parseTags(fields.tags);
   const servings = fields.servings.trim();
   const optional: Array<[string, string]> = [
-    ['coverAlt', fields.coverAlt.trim()],
+    ['coverAlt', hasPhoto ? fields.coverAlt.trim() : ''],
     ['prepTime', fields.prepTime.trim()],
     ['cookTime', fields.cookTime.trim()],
     ['source', fields.source.trim()],
@@ -54,7 +55,7 @@ export function recipeToMarkdown(fields: RecipeFormFields, dateAdded: Date): str
   const frontmatter = [
     `title: ${quote(fields.title.trim())}`,
     `category: ${fields.category}`,
-    'cover: ./cover.webp',
+    ...(hasPhoto ? ['cover: ./cover.webp'] : []),
     ...optional.filter(([, value]) => value).map(([key, value]) => `${key}: ${quote(value)}`),
     ...(tags.length > 0 ? [`tags: [${tags.join(', ')}]`] : []),
     // A whole number as a YAML number; anything else quoted, so it can't inject keys and the schema rejects it

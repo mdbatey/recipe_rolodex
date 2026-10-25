@@ -15,7 +15,8 @@ export function recipeSchema<TCover extends z.ZodType>(cover: TCover) {
   return z.object({
     title: z.string().trim().min(1),
     category: z.enum(CATEGORY_IDS),
-    cover,
+    /** Optional: without one, the card draws a "photo coming soon" placeholder with the title. */
+    cover: cover.optional(),
     coverAlt: z.string().trim().min(1).optional(),
     tags: z.array(tagSchema).default([]),
     servings: z.number().int().positive().optional(),

@@ -1,8 +1,6 @@
 ---
 title: Spicy Yellow Curry Chicken and Brothy Rice Bowls
 category: dinner
-cover: ./cover.webp
-coverAlt: Placeholder card reading "Photo coming soon"
 tags: [chicken, curry, rice, spicy]
 servings: 4
 prepTime: 10 min
