@@ -50,7 +50,7 @@ const footnote = tag
 
 {sorted.length > 0 ? (
   <div class="card-grid">
-    {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} />)}
+    {sorted.map((recipe, i) => <RecipeCard recipe={recipe} index={i} forTag={tag} />)}
   </div>
 ) : (
   <p class="empty">No cards behind this divider yet.</p>
@@ -73,7 +73,7 @@ const footnote = tag
   const cards = [...document.querySelectorAll<HTMLAnchorElement>('.card-grid a')];
 
   function show(visible: Set<string> | null, query: string) {
-    for (const card of cards) card.hidden = visible !== null && !visible.has(card.getAttribute('href')!);
+    for (const card of cards) card.hidden = visible !== null && !visible.has(card.dataset.recipe!);
     if (!footnote) return;
     if (visible === null) {
       footnote.textContent = footnote.dataset.footnote!;
@@ -101,7 +101,7 @@ const footnote = tag
       const search = await pagefind.debouncedSearch(query);
       if (search === null || input.value.trim() !== query) return; // superseded by later typing
       const urls = await Promise.all(search.results.map(async (result) => (await result.data()).url));
-      show(matchingCards(cards.map((card) => card.getAttribute('href')!), urls), query);
+      show(matchingCards(cards.map((card) => card.dataset.recipe!), urls), query);
     });
   }
 

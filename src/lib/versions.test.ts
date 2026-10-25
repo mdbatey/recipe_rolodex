@@ -28,7 +28,12 @@ describe('variationSchema', () => {
   it('needs only a label and a date', () => {
     const variation = schema.parse({ label: 'Mine', dateAdded: '2026-10-20' });
     expect(variation.cover).toBeUndefined();
+    expect(variation.tags).toBeUndefined();
     expect(variation.notes).toEqual([]);
+  });
+
+  it('takes its own tags', () => {
+    expect(schema.parse({ label: 'Mine', dateAdded: '2026-10-20', tags: ['soup', 'turkey'] }).tags).toEqual(['soup', 'turkey']);
   });
 
   it.each([
@@ -36,6 +41,7 @@ describe('variationSchema', () => {
     ['a blank label', { label: ' ', dateAdded: '2026-10-20' }],
     ['a label too long for a tab', { label: 'My extra spicy weeknight version', dateAdded: '2026-10-20' }],
     ['a missing date', { label: 'Mine' }],
+    ['a tag with spaces', { label: 'Mine', dateAdded: '2026-10-20', tags: ['ground turkey'] }],
   ])('rejects %s', (_, input) => {
     expect(schema.safeParse(input).success).toBe(false);
   });

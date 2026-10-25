@@ -3,23 +3,33 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { recipePath } from '../lib/paths';
 import { sourceLabel } from '../lib/source';
+import { recipeTags, versionForTag, versionTags } from '../lib/tags';
+import { splitVariationId } from '../lib/versions';
 import PhotoPlaceholder from './PhotoPlaceholder.astro';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
   /** Position in the grid; picks one of the six design tilts so neighbours differ. */
   index?: number;
+  /** On a tag page: the card opens, labels and stamps the version that has this tag. */
+  forTag?: string;
 }
 
-const { recipe, index = 0 } = Astro.props;
+const { recipe, index = 0, forTag } = Astro.props;
 const tilt = `var(--tilt-${(index % 6) + 1})`;
-const { title, cover, coverAlt, tags, servings, prepTime, cookTime, source } = recipe.data;
-const versions = 1 + (await getCollection('variations', (v) => v.id.startsWith(`${recipe.id}/`))).length;
+const { title, cover, coverAlt, servings, prepTime, cookTime, source } = recipe.data;
+const variations = await getCollection('variations', (v) => v.id.startsWith(`${recipe.id}/`));
+const matched = forTag ? versionForTag(forTag, recipe, variations) : undefined;
+const href = recipePath(recipe.id, matched && splitVariationId(matched.id).version);
+// In the box, every version's stamps; on a tag page, just the matching version's.
+const tags = forTag ? versionTags(recipe, matched) : recipeTags(recipe, variations);
+const versionNote = matched ? matched.data.label : variations.length > 0 ? `${variations.length + 1} versions` : null;
 const times = [prepTime, cookTime].filter(Boolean).join(' + ');
 const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Boolean).join(' · ');
 ---
 
-<a class="recipe-card" href={recipePath(recipe.id)} style={`--card-tilt: ${tilt}`}>
+<!-- data-recipe: the recipe's own page, which search matches against even when href opens a variation -->
+<a class="recipe-card" href={href} data-recipe={recipePath(recipe.id)} style={`--card-tilt: ${tilt}`}>
   <span class="tape" aria-hidden="true"></span>
   {cover
     ? <Image class="recipe-card__photo" src={cover} alt={coverAlt ?? ''} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 280px" />
@@ -30,7 +40,7 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
   <div class="recipe-card__body ruled">
     {meta && <span>{meta}</span>}
     {source && <span class="muted">from {sourceLabel(source).text}</span>}
-    {versions > 1 && <span class="versions">{versions} versions</span>}
+    {versionNote && <span class="versions">{versionNote}</span>}
     {tags.length > 0 && (
       <div class="stamps">
         {tags.map((tag) => <span class="stamp">{tag}</span>)}
