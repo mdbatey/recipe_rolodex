@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import { categoryPath, recipePath, tagPath, withBase } from '../lib/paths';
 import { categoryLabel } from '../lib/categories';
 import { editUrl } from '../lib/github';
+import { sourceLabel } from '../lib/source';
 import { originalLabel, splitVariationId } from '../lib/versions';
 import NutritionLabel from './NutritionLabel.astro';
 import PhotoPlaceholder from './PhotoPlaceholder.astro';
@@ -47,7 +48,7 @@ const stats = [
   { label: 'Cook', value: cookTime },
 ].filter((stat): stat is { label: string; value: string } => Boolean(stat.value));
 
-const sourceIsLink = source ? /^https?:\/\//.test(source) : false;
+const sourceLink = source ? sourceLabel(source) : undefined;
 const monthYear = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 const added = monthYear(dateAdded);
 ---
@@ -100,7 +101,7 @@ const added = monthYear(dateAdded);
           {tags.map((tag) => <a class="stamp stamp--lg" href={tagPath(tag)}>{tag}</a>)}
           {source && (
             <span class="source">
-              from {sourceIsLink ? <a href={source} rel="noopener">{new URL(source).hostname.replace(/^www\./, '')}</a> : source}
+              from {sourceLink?.href ? <a href={sourceLink.href} rel="noopener">{sourceLink.text}</a> : sourceLink?.text}
             </span>
           )}
         </div>
