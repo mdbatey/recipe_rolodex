@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { tagPath } from '../lib/paths';
+import { tagPath, withBase } from '../lib/paths';
 import { tagsByUse } from '../lib/tags';
 
 interface Props {
@@ -17,8 +17,11 @@ const tags = tagsByUse(await getCollection('recipes'));
   <nav class="stamp-row" aria-label="Stamps">
     <span class="stamp-row__label">Stamps</span>
     <div class="stamps stamp-row__list">
-      {tags.map((tag) => (
-        <a class="stamp" href={tagPath(tag)} aria-current={tag === active ? 'page' : undefined}>{tag}</a>
+      {tags.map((tag) => tag === active ? (
+        // Clicking the current stamp again un-stamps: back to every card
+        <a class="stamp" href={withBase('/')} aria-current="page" title="Show all cards">{tag}</a>
+      ) : (
+        <a class="stamp" href={tagPath(tag)}>{tag}</a>
       ))}
     </div>
   </nav>
