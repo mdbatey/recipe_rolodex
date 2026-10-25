@@ -6,6 +6,7 @@ import { categoryPath, recipePath, tagPath, withBase } from '../lib/paths';
 import { categoryLabel } from '../lib/categories';
 import { editUrl } from '../lib/github';
 import { sourceLabel } from '../lib/source';
+import { versionTags } from '../lib/tags';
 import { originalLabel, splitVariationId } from '../lib/versions';
 import NutritionLabel from './NutritionLabel.astro';
 import PhotoPlaceholder from './PhotoPlaceholder.astro';
@@ -19,7 +20,8 @@ interface Props {
 }
 
 const { recipe, variations, active } = Astro.props;
-const { title, category, tags, source } = recipe.data;
+const { title, category, source } = recipe.data;
+const tags = versionTags(recipe, active);
 // A variation's own servings, times, date and notes win; it shows the original's photo unless it has its own.
 const own = active?.data;
 const cover = own?.cover ?? recipe.data.cover;

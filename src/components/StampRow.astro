@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { tagPath, withBase } from '../lib/paths';
-import { tagsByUse } from '../lib/tags';
+import { recipeTags, tagsByUse } from '../lib/tags';
 
 interface Props {
   /** The tag whose page this is, if any. */
@@ -9,8 +9,11 @@ interface Props {
 }
 
 const { active } = Astro.props;
-// Every tag in the box, not just this page's cards, so you can always jump to another.
-const tags = tagsByUse(await getCollection('recipes'));
+// Every tag in the box (variations' too), not just this page's cards, so you can always jump to another.
+const [recipes, variations] = await Promise.all([getCollection('recipes'), getCollection('variations')]);
+const tags = tagsByUse(recipes.map((recipe) => ({
+  data: { tags: recipeTags(recipe, variations.filter((v) => v.id.startsWith(`${recipe.id}/`))) },
+})));
 ---
 
 {tags.length > 0 && (

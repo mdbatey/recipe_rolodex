@@ -1,5 +1,6 @@
 ---
 label: Mine
+tags: [soup, turkey]
 dateAdded: 2026-10-20
 ---
 

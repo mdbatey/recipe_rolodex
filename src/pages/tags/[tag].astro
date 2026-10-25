@@ -3,13 +3,18 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RecipeBox from '../../components/RecipeBox.astro';
-import { allTags, tagLabel } from '../../lib/tags';
+import { allTags, recipeTags, tagLabel } from '../../lib/tags';
 
 export const getStaticPaths = (async () => {
-  const recipes = await getCollection('recipes');
-  return allTags(recipes).map((tag) => ({
+  const [recipes, variations] = await Promise.all([getCollection('recipes'), getCollection('variations')]);
+  // A recipe is stamped with every tag across its versions: the turkey variation puts the chili on /tags/turkey/.
+  const stamped = recipes.map((recipe) => ({
+    recipe,
+    data: { tags: recipeTags(recipe, variations.filter((v) => v.id.startsWith(`${recipe.id}/`))) },
+  }));
+  return allTags(stamped).map((tag) => ({
     params: { tag },
-    props: { tag, recipes: recipes.filter((recipe) => recipe.data.tags.includes(tag)) },
+    props: { tag, recipes: stamped.filter((entry) => entry.data.tags.includes(tag)).map((entry) => entry.recipe) },
   }));
 }) satisfies GetStaticPaths;
 
