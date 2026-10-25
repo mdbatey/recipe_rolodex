@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import RecipeCard from './RecipeCard.astro';
 import CategoryTabs from './CategoryTabs.astro';
+import StampRow from './StampRow.astro';
 import { withBase } from '../lib/paths';
 import { categoryLabel, type CategoryId } from '../lib/categories';
 
@@ -45,6 +46,7 @@ const footnote = tag
 </div>
 
 <CategoryTabs active={category} />
+<StampRow active={tag} />
 
 {tag && (
   <p class="filter-note">

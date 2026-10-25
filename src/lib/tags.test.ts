@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allTags, tagLabel } from './tags';
+import { allTags, tagLabel, tagsByUse } from './tags';
 
 describe('allTags', () => {
   it('returns each tag once, sorted', () => {
@@ -13,6 +13,22 @@ describe('allTags', () => {
 
   it('returns nothing when no recipe has tags', () => {
     expect(allTags([{ data: { tags: [] } }])).toEqual([]);
+  });
+});
+
+describe('tagsByUse', () => {
+  it('puts the most-used tags first, ties alphabetically', () => {
+    const recipes = [
+      { data: { tags: ['soup', 'beef'] } },
+      { data: { tags: ['chicken', 'soup'] } },
+      { data: { tags: ['chicken', 'curry'] } },
+      { data: { tags: [] } },
+    ];
+    expect(tagsByUse(recipes)).toEqual(['chicken', 'soup', 'beef', 'curry']);
+  });
+
+  it('returns nothing when no recipe has tags', () => {
+    expect(tagsByUse([{ data: { tags: [] } }])).toEqual([]);
   });
 });
 
