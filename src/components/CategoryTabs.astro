@@ -22,10 +22,13 @@ const tabs = [
 
 <style>
   .tabs {
+    --tab-current-height: 50px;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     gap: 6px;
+    /* Always as tall as a current tab, so pages with none (tag pages) don't shift up */
+    min-height: var(--tab-current-height);
     padding-left: var(--space-2);
     border-bottom: 3px solid var(--color-wood);
   }
@@ -51,11 +54,11 @@ const tabs = [
   .tab:nth-child(6n + 4) { background: var(--tab-4); }
   .tab:nth-child(6n + 5) { background: var(--tab-5); }
   .tab:nth-child(6n + 6) { background: var(--tab-6); }
-  .tab[aria-current='page'] { background: var(--color-card); min-height: 50px; }
+  .tab[aria-current='page'] { background: var(--color-card); min-height: var(--tab-current-height); }
 
   /* One scrollable row of tabs on phones */
   @media (max-width: 600px) {
-    .tabs { flex-wrap: nowrap; overflow-x: auto; padding-top: 6px; }
+    .tabs { flex-wrap: nowrap; overflow-x: auto; padding-top: 6px; min-height: calc(var(--tab-current-height) + 6px); }
     .tab { flex-shrink: 0; }
   }
 </style>
