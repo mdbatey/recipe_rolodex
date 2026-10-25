@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { recipePath } from '../lib/paths';
+import { sourceLabel } from '../lib/source';
 import PhotoPlaceholder from './PhotoPlaceholder.astro';
 
 interface Props {
@@ -28,7 +29,7 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
   </div>
   <div class="recipe-card__body ruled">
     {meta && <span>{meta}</span>}
-    {source && <span class="muted">from {source}</span>}
+    {source && <span class="muted">from {sourceLabel(source).text}</span>}
     {versions > 1 && <span class="versions">{versions} versions</span>}
     {tags.length > 0 && (
       <div class="stamps">
@@ -84,6 +85,7 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
     min-height: calc(var(--rule-step-card) * 3);
     padding: 6px 18px 18px;
     font-size: 0.9375rem;
+    overflow-wrap: anywhere; /* a long word never runs off the card */
   }
   .recipe-card__body .stamps { padding-top: var(--space-2); }
   .muted { color: var(--color-ink-soft); }
