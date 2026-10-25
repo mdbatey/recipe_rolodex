@@ -58,6 +58,14 @@ describe('submitRecipe', () => {
     expect(calls[5]!.body).toMatchObject({ head: branch, base: 'main', title: 'Add recipe: Black Bean Soup' });
   });
 
+  it('commits only the Markdown when there is no photo', async () => {
+    const { calls, fetchImpl } = fakeGitHub(happyRoutes);
+    await submitRecipe({ ...submission, photoBase64: undefined }, fetchImpl);
+    expect(calls.filter((c) => c.method === 'PUT').map((c) => c.url)).toEqual([
+      '/repos/mdbatey/recipe_rolodex/contents/src/content/recipes/black-bean-soup/index.md',
+    ]);
+  });
+
   it('never writes to main', async () => {
     const { calls, fetchImpl } = fakeGitHub(happyRoutes);
     await submitRecipe(submission, fetchImpl);

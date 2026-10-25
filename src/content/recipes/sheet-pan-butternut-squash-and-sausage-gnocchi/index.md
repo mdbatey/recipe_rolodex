@@ -1,8 +1,6 @@
 ---
 title: Sheet Pan Butternut Squash and Sausage Gnocchi
 category: dinner
-cover: ./cover.webp
-coverAlt: Placeholder card reading "Photo coming soon"
 tags: [sheet-pan, sausage, gnocchi, weeknight]
 servings: 4
 prepTime: 20 min

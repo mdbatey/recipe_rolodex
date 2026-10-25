@@ -91,7 +91,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
         </div>
 
         <div class="field">
-          <span class="label" id="photo-label">Cover photo</span>
+          <span class="label" id="photo-label">Cover photo (optional)</span>
           <label class="dropzone" for="photo">
             <span class="dropzone__thumb">
               <img data-photo-preview alt="" hidden />
@@ -99,7 +99,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
             </span>
             <span class="dropzone__text">
               <strong data-photo-title>Take a photo or choose one</strong>
-              <span class="hint" data-photo-status aria-live="polite">Shrunk to 1600px WebP, under about 400 KB</span>
+              <span class="hint" data-photo-status aria-live="polite">Shrunk to 1600px WebP, under about 400 KB. Skip it and the card shows "photo coming soon".</span>
             </span>
             <input class="visually-hidden" id="photo" name="photo" type="file" accept="image/*" aria-labelledby="photo-label" />
           </label>
@@ -243,7 +243,6 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
     const list: string[] = [];
     if (!slugify(fields.title)) list.push('a title with letters or numbers');
     if (!CATEGORY_IDS.includes(fields.category)) list.push('a category');
-    if (!photo) list.push('a cover photo');
     if (parseLines(fields.ingredients).length === 0) list.push('at least one ingredient');
     if (parseLines(fields.steps).length === 0) list.push('at least one step');
     return list;
@@ -261,7 +260,7 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
 
     const missing = problems(fields);
     if (missing.length > 0) return showMessage(`The card still needs ${missing.join(', ')}.`);
-    if (!token || !photo) return;
+    if (!token) return;
 
     showMessage(null);
     submit.disabled = true;
@@ -272,8 +271,8 @@ const tokenUrl = 'https://github.com/settings/personal-access-tokens/new';
         token,
         slug: slugify(fields.title),
         title: fields.title.trim(),
-        markdown: recipeToMarkdown(fields, now),
-        photoBase64: bytesToBase64(new Uint8Array(await photo.photo.arrayBuffer())),
+        markdown: recipeToMarkdown(fields, now, { hasPhoto: photo !== null }),
+        photoBase64: photo ? bytesToBase64(new Uint8Array(await photo.photo.arrayBuffer())) : undefined,
         branchSuffix: now.toISOString().replace(/\D/g, '').slice(0, 14),
       });
       $<HTMLElement>('[data-done-title]').textContent = fields.title.trim();

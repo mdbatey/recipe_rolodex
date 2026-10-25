@@ -1,8 +1,6 @@
 ---
 title: Kota Avgolemono (Greek Lemon Chicken Soup)
 category: dinner
-cover: ./cover.webp
-coverAlt: Placeholder card reading "Photo coming soon"
 tags: [soup, chicken, greek]
 servings: 6
 cookTime: 1 hr 20 min

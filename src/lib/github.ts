@@ -19,8 +19,8 @@ export type Submission = {
   slug: string;
   title: string;
   markdown: string;
-  /** The cover photo's WebP bytes, base64-encoded (the contents API's transport). */
-  photoBase64: string;
+  /** The cover photo's WebP bytes, base64-encoded (the contents API's transport). Absent when there's no photo. */
+  photoBase64?: string;
   /** Unique per submission, so resubmitting never collides with an earlier branch. */
   branchSuffix: string;
 };
@@ -84,7 +84,7 @@ export async function slugExists(token: string, slug: string, fetchImpl?: Fetch)
   return true;
 }
 
-/** Makes the branch, commits the photo then the Markdown, and opens the PR. Returns the PR's URL. */
+/** Makes the branch, commits the photo (if any) then the Markdown, and opens the PR. Returns the PR's URL. */
 export async function submitRecipe(submission: Submission, fetchImpl?: Fetch): Promise<string> {
   const { token, slug, title, markdown, photoBase64, branchSuffix } = submission;
   const { call, expectOk } = createClient(token, fetchImpl);
@@ -101,14 +101,16 @@ export async function submitRecipe(submission: Submission, fetchImpl?: Fetch): P
   );
 
   const folder = `${RECIPES_DIR}/${slug}`;
-  await expectOk(
-    await call('PUT', `/repos/${REPO}/contents/${folder}/cover.webp`, {
-      message: `Add cover photo for ${title}`,
-      content: photoBase64,
-      branch,
-    }),
-    'upload the photo',
-  );
+  if (photoBase64) {
+    await expectOk(
+      await call('PUT', `/repos/${REPO}/contents/${folder}/cover.webp`, {
+        message: `Add cover photo for ${title}`,
+        content: photoBase64,
+        branch,
+      }),
+      'upload the photo',
+    );
+  }
   await expectOk(
     await call('PUT', `/repos/${REPO}/contents/${folder}/index.md`, {
       message: `Add recipe: ${title}`,

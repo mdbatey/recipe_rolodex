@@ -7,6 +7,7 @@ import { categoryLabel } from '../lib/categories';
 import { editUrl } from '../lib/github';
 import { originalLabel, splitVariationId } from '../lib/versions';
 import NutritionLabel from './NutritionLabel.astro';
+import PhotoPlaceholder from './PhotoPlaceholder.astro';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
@@ -65,16 +66,20 @@ const added = monthYear(dateAdded);
       <figure class="snapshot">
         <span class="tape tape--left" aria-hidden="true"></span>
         <span class="tape tape--right" aria-hidden="true"></span>
-        <Picture
-          class="snapshot__img"
-          src={cover}
-          alt={coverAlt ?? ''}
-          formats={['avif', 'webp']}
-          fallbackFormat="webp"
-          widths={[480, 800, 1200]}
-          sizes="(max-width: 1000px) 90vw, 420px"
-          loading="eager"
-        />
+        {cover ? (
+          <Picture
+            class="snapshot__img"
+            src={cover}
+            alt={coverAlt ?? ''}
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            widths={[480, 800, 1200]}
+            sizes="(max-width: 1000px) 90vw, 420px"
+            loading="eager"
+          />
+        ) : (
+          <PhotoPlaceholder class="snapshot__img" title={title} />
+        )}
       </figure>
 
       {stats.length > 0 && (

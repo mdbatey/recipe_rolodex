@@ -1,0 +1,60 @@
+---
+/**
+ * Stands in for a recipe's cover photo until it has one: tan stripes with a
+ * small paper label in the recipe's own title, drawn in code so it never goes
+ * stale. Size it with `class`, like the <Image> it replaces.
+ */
+interface Props {
+  title: string;
+  class?: string;
+}
+
+const { title, class: className } = Astro.props;
+---
+
+<div class:list={['photo-placeholder', className]} aria-hidden="true" data-pagefind-ignore>
+  <span class="photo-placeholder__label">
+    <span class="photo-placeholder__title">{title}</span>
+    <span class="photo-placeholder__note">Photo coming soon</span>
+  </span>
+</div>
+
+<style>
+  .photo-placeholder {
+    position: relative;
+    container-type: inline-size;
+    background: repeating-linear-gradient(135deg, var(--color-photo-placeholder-a) 0 10px, var(--color-photo-placeholder-b) 10px 20px);
+  }
+  /* Absolutely centered, so it still works when the caller sets display: block */
+  .photo-placeholder__label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max-content;
+    max-width: 78%;
+    padding: 0.5em 1.1em 0.6em;
+    background: var(--color-card);
+    box-shadow: 0 2px 6px rgb(70 50 20 / 0.25);
+    text-align: center;
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+  .photo-placeholder__title {
+    display: block;
+    padding-bottom: 0.15em;
+    border-bottom: 1.5px solid var(--color-rule-red);
+    font-family: var(--font-hand);
+    font-weight: 700;
+    font-size: clamp(1rem, 6.5cqi, 1.75rem);
+    line-height: 1.1;
+    color: var(--color-pen);
+  }
+  .photo-placeholder__note {
+    display: block;
+    padding-top: 0.4em;
+    font-family: var(--font-display);
+    font-size: clamp(0.5625rem, 2.6cqi, 0.75rem);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+</style>

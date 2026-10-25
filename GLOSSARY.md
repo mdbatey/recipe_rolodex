@@ -7,7 +7,7 @@ One dish, stored as a Markdown file with frontmatter in its own folder under `sr
 The URL- and folder-safe name derived from a recipe's title (`Grandma's Lasagna` becomes `grandmas-lasagna`). Unique; collisions are refused, never overwritten.
 
 **Cover Photo**
-The single image attached to a recipe, stored beside its Markdown file as WebP of at most about 400 KB.
+The single image attached to a recipe, stored beside its Markdown file as WebP of at most about 400 KB. Optional: without one, the site draws a "photo coming soon" placeholder labelled with the recipe's title.
 
 **Category**
 The one meal-based divider a recipe is filed behind: breakfast, lunch, dinner, sides, desserts, snacks or drinks. Each is a tab with its own page. File a recipe where you'd usually reach for it; tags cover the rest. See ADR 0003.

@@ -49,7 +49,7 @@ describe('recipeToMarkdown', () => {
   };
 
   it('writes frontmatter that the content schema accepts', () => {
-    const { data } = split(recipeToMarkdown(full, date));
+    const { data } = split(recipeToMarkdown(full, date, { hasPhoto: true }));
     const recipe = recipeSchema(z.string()).parse(data);
     expect(recipe).toMatchObject({
       title: "Mor Mor's Chili",
@@ -74,7 +74,14 @@ describe('recipeToMarkdown', () => {
 
   it('leaves blank optional fields out', () => {
     const { data } = split(recipeToMarkdown({ ...blank, title: 'Toast' }, date));
-    expect(Object.keys(data).sort()).toEqual(['category', 'cover', 'dateAdded', 'title']);
+    expect(Object.keys(data).sort()).toEqual(['category', 'dateAdded', 'title']);
+  });
+
+  it('leaves the cover and its description out when there is no photo', () => {
+    const { data } = split(recipeToMarkdown({ ...full }, date, { hasPhoto: false }));
+    expect(data.cover).toBeUndefined();
+    expect(data.coverAlt).toBeUndefined();
+    expect(recipeSchema(z.string()).safeParse(data).success).toBe(true);
   });
 
   it('keeps YAML-special characters as plain text', () => {

@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { recipePath } from '../lib/paths';
+import PhotoPlaceholder from './PhotoPlaceholder.astro';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
@@ -19,7 +20,9 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
 
 <a class="recipe-card" href={recipePath(recipe.id)} style={`--card-tilt: ${tilt}`}>
   <span class="tape" aria-hidden="true"></span>
-  <Image class="recipe-card__photo" src={cover} alt={coverAlt ?? ''} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 280px" />
+  {cover
+    ? <Image class="recipe-card__photo" src={cover} alt={coverAlt ?? ''} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 280px" />
+    : <PhotoPlaceholder class="recipe-card__photo" title={title} />}
   <div class="recipe-card__head">
     <h2 class="recipe-card__title">{title}</h2>
   </div>
@@ -55,7 +58,8 @@ const meta = [servings ? `Serves ${servings}` : null, times || null].filter(Bool
     transform: translateY(-3px);
   }
   .recipe-card .tape { top: -12px; left: 50%; margin-left: -46px; transform: rotate(-3deg); }
-  .recipe-card__photo {
+  /* :global so it also sizes the PhotoPlaceholder component */
+  .recipe-card :global(.recipe-card__photo) {
     display: block;
     width: calc(100% - 28px);
     height: 168px;
