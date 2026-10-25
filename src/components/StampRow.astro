@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import { tagPath } from '../lib/paths';
+import { tagsByUse } from '../lib/tags';
+
+interface Props {
+  /** The tag whose page this is, if any. */
+  active?: string;
+}
+
+const { active } = Astro.props;
+// Every tag in the box, not just this page's cards, so you can always jump to another.
+const tags = tagsByUse(await getCollection('recipes'));
+---
+
+{tags.length > 0 && (
+  <nav class="stamp-row" aria-label="Stamps">
+    <span class="stamp-row__label">Stamps</span>
+    <div class="stamps stamp-row__list">
+      {tags.map((tag) => (
+        <a class="stamp" href={tagPath(tag)} aria-current={tag === active ? 'page' : undefined}>{tag}</a>
+      ))}
+    </div>
+  </nav>
+)}
+
+<style>
+  .stamp-row { display: flex; align-items: center; gap: var(--space-3); }
+  .stamp-row__label {
+    flex-shrink: 0;
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--color-pencil);
+  }
+  .stamp-row__list { row-gap: var(--space-3); }
+  /* Stamps keep their look but get a 44px-tall tap area */
+  .stamp { position: relative; }
+  .stamp::after { content: ''; position: absolute; inset: -11px -4px; }
+  .stamp:hover { background: var(--color-card); }
+  .stamp[aria-current='page'] { background: var(--color-accent); color: var(--color-on-accent); }
+
+  /* One scrollable row of stamps on phones, like the tabs */
+  @media (max-width: 600px) {
+    .stamp-row__list { flex-wrap: nowrap; overflow-x: auto; padding: 6px 2px; }
+    .stamp { flex-shrink: 0; }
+  }
+</style>
