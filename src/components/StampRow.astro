@@ -47,7 +47,9 @@ const tags = tagsByUse(recipes.map((recipe) => ({
 
   /* One scrollable row of stamps on phones, like the tabs */
   @media (max-width: 600px) {
-    .stamp-row__list { flex-wrap: nowrap; overflow-x: auto; padding: 6px 2px; }
+    /* Horizontal scroll only. The padding holds each stamp's 11px tap area so clipping the
+       vertical axis doesn't shrink it; the negative margin keeps the old layout. */
+    .stamp-row__list { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding: 11px 2px; margin: -5px 0; }
     .stamp { flex-shrink: 0; }
   }
 </style>
