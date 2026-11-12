@@ -1,6 +1,7 @@
 ---
 title: Chipotle Lime Salmon Tacos
 category: dinner
+cover: ./cover.webp
 tags: [fish, tacos]
 servings: 4
 prepTime: 45 min
